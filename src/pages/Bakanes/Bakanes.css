@@ -83,7 +83,7 @@
 .bakanes-search-input {
   width: 100%;
   padding: 0.6rem 1rem 0.6rem 2.8rem;
-  border: 1px solid #d1d5db;
+  border: 1px solid #8f8d93;
   border-radius: 0.375rem;
   font-size: 0.875rem;
   color: #111827;
@@ -161,7 +161,6 @@
   text-align: left; /* Explicitly left-aligned */
   font-size: 0.875rem;
   font-weight: 700;
-  text-transform: capitalize;
   letter-spacing: 0.05em;
   color: #656268;
   background-color: #f9fafb;
@@ -169,6 +168,18 @@
   border-right: 1px solid #d1d5db;
   line-height: 1.2;
   vertical-align: middle;
+}
+
+.th-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.sort-icon {
+  margin-left: 0.5rem;
+  flex-shrink: 0;
 }
 
 .bakanes-table th:last-child {
@@ -196,7 +207,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0; /* Align to the left instead of center */
+  margin: 0 auto; /* Centered in the column */
 }
 
 .status-badge-active {

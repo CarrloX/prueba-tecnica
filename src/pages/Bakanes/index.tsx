@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Search } from "lucide-react";
+import CreateCategoryDrawer from "../../components/CreateCategoryDrawer/CreateCategoryDrawer";
 import "./Bakanes.css";
 
 type Tab = "categorias" | "tipos" | "evidencias";
@@ -14,6 +15,7 @@ interface Category {
 
 export default function Bakanes() {
   const [activeTab, setActiveTab] = useState<Tab>("categorias");
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
@@ -22,14 +24,14 @@ export default function Bakanes() {
   const categories: Category[] = [
     {
       id: 1,
-      nombre: "Foto + Descripción",
+      nombre: "Foto + descripción",
       descripcion: "Realizar actividad física al menos 30 minutos cada día",
       fecha: "Abr 3, 2024",
       estado: "Activo",
     },
     {
       id: 2,
-      nombre: "Foto + Descripción",
+      nombre: "Foto + descripción",
       descripcion: "Realizar actividad física al menos 30 minutos cada día",
       fecha: "Abr 3, 2024",
       estado: "Activo",
@@ -122,6 +124,7 @@ export default function Bakanes() {
         <button
           className="bakanes-create-button"
           style={{ marginLeft: "auto" }}
+          onClick={() => setIsDrawerOpen(true)}
         >
           Crear tipo de categoria
         </button>
@@ -133,15 +136,100 @@ export default function Bakanes() {
           <thead>
             <tr>
               <th>
-                Nombre de la <br /> categoría
+                <div className="th-container">
+                  <span>
+                    Nombre de la <br /> categoría
+                  </span>
+                  <svg
+                    width="5"
+                    height="9"
+                    viewBox="0 0 5 9"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="sort-icon"
+                  >
+                    <path
+                      d="M2.295 1.415L3.88 3L4.585 2.295L2.295 0L0 2.295L0.71 3L2.295 1.415ZM2.295 7.585L0.71 6L0.00500011 6.705L2.295 9L4.59 6.705L3.88 6L2.295 7.585Z"
+                      fill="#28272A"
+                    />
+                  </svg>
+                </div>
               </th>
               <th>
-                Icono de la <br /> categoría
+                <div className="th-container">
+                  <span>
+                    Icono de la <br /> categoría
+                  </span>
+                  <svg
+                    width="8"
+                    height="14"
+                    viewBox="0 0 5 9"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="sort-icon"
+                  >
+                    <path
+                      d="M2.295 1.415L3.88 3L4.585 2.295L2.295 0L0 2.295L0.71 3L2.295 1.415ZM2.295 7.585L0.71 6L0.00500011 6.705L2.295 9L4.59 6.705L3.88 6L2.295 7.585Z"
+                      fill="#28272A"
+                    />
+                  </svg>
+                </div>
               </th>
-              <th>Estado</th>
-              <th>Descripción</th>
               <th>
-                Fecha de <br /> creación
+                <div className="th-container">
+                  <span>Estado</span>
+                  <svg
+                    width="8"
+                    height="14"
+                    viewBox="0 0 5 9"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="sort-icon"
+                  >
+                    <path
+                      d="M2.295 1.415L3.88 3L4.585 2.295L2.295 0L0 2.295L0.71 3L2.295 1.415ZM2.295 7.585L0.71 6L0.00500011 6.705L2.295 9L4.59 6.705L3.88 6L2.295 7.585Z"
+                      fill="#28272A"
+                    />
+                  </svg>
+                </div>
+              </th>
+              <th>
+                <div className="th-container">
+                  <span>Descripción</span>
+                  <svg
+                    width="8"
+                    height="14"
+                    viewBox="0 0 5 9"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="sort-icon"
+                  >
+                    <path
+                      d="M2.295 1.415L3.88 3L4.585 2.295L2.295 0L0 2.295L0.71 3L2.295 1.415ZM2.295 7.585L0.71 6L0.00500011 6.705L2.295 9L4.59 6.705L3.88 6L2.295 7.585Z"
+                      fill="#28272A"
+                    />
+                  </svg>
+                </div>
+              </th>
+              <th>
+                <div className="th-container">
+                  <span>
+                    Fecha de <br /> creación
+                  </span>
+                  <svg
+                    width="5"
+                    height="9"
+                    viewBox="0 0 5 9"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="sort-icon"
+                  >
+                    <path
+                      d="M2.295 1.415L3.88 3L4.585 2.295L2.295 0L0 2.295L0.71 3L2.295 1.415ZM2.295 7.585L0.71 6L0.00500011 6.705L2.295 9L4.59 6.705L3.88 6L2.295 7.585Z"
+                      fill="#28272A"
+                    />
+                  </svg>
+                </div>
               </th>
               <th>Acciones</th>
             </tr>
@@ -321,6 +409,11 @@ export default function Bakanes() {
           </div>
         </div>
       </div>
+
+      <CreateCategoryDrawer
+        isOpen={isDrawerOpen}
+        onClose={() => setIsDrawerOpen(false)}
+      />
     </div>
   );
 }
