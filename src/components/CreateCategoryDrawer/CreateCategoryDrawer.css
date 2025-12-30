@@ -92,6 +92,13 @@
   color: #333;
   width: 100%;
   box-sizing: border-box;
+  transition: border-color 0.2s ease;
+}
+
+.form-input:focus,
+.form-textarea:focus {
+  outline: none;
+  border-color: #2f2b54; /* Dark purple/blue to match theme */
 }
 
 .form-textarea {

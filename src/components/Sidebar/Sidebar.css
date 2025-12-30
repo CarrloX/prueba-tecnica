@@ -25,6 +25,17 @@
   object-fit: cover;
 }
 
+.sidebar-logo {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: auto !important; /* Sobrescribir el 100% genérico si es necesario */
+  max-width: 80%;
+  height: auto !important;
+  z-index: 5;
+}
+
 .sidebar-nav {
   flex: 1;
   padding: 8px 0;
@@ -90,7 +101,7 @@
 }
 
 .coming-soon-tooltip::before {
-  content: '';
+  content: "";
   position: absolute;
   left: -6px;
   top: 50%;
