@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { MdSwapVert } from "react-icons/md";
 import CreateCategoryDrawer from "../../components/CreateCategoryDrawer/CreateCategoryDrawer";
 import "./Bakanes.css";
@@ -25,6 +25,26 @@ export default function Bakanes() {
   const [columnOrder, setColumnOrder] = useState<string[]>([
     'nombre', 'icono', 'estado', 'descripcion', 'fecha', 'acciones'
   ]);
+
+  // Column widths state for resizing
+  const [columnWidths, setColumnWidths] = useState<Record<string, number>>({
+    'nombre': 200,
+    'icono': 100,
+    'estado': 120,
+    'descripcion': 300,
+    'fecha': 150,
+    'acciones': 200
+  });
+
+  // Resizing state for UI feedback
+  const [resizingColumn, setResizingColumn] = useState<string | null>(null);
+
+  // Resizing ref to avoid stale closure issues
+  const resizingRef = useRef<{
+    column: string;
+    startX: number;
+    startWidth: number;
+  } | null>(null);
 
   // Sample data matching Figma design
   const categories: Category[] = [
@@ -84,14 +104,52 @@ export default function Bakanes() {
     setOpenDropdownId(null); // Cerrar dropdown después del intercambio
   };
 
+  // Función para manejar el inicio del redimensionamiento
+  const handleMouseDown = (column: string, event: React.MouseEvent) => {
+    event.preventDefault();
+    const startX = event.clientX;
+    const startWidth = columnWidths[column] || 150;
+
+    setResizingColumn(column);
+    resizingRef.current = {
+      column,
+      startX,
+      startWidth
+    };
+
+    const handleMouseMove = (e: MouseEvent) => {
+      if (resizingRef.current) {
+        const diff = e.clientX - resizingRef.current.startX;
+        const newWidth = Math.max(80, resizingRef.current.startWidth + diff); // Mínimo 80px
+
+        setColumnWidths(prev => ({
+          ...prev,
+          [resizingRef.current!.column]: newWidth
+        }));
+      }
+    };
+
+    const handleMouseUp = () => {
+      resizingRef.current = null;
+      setResizingColumn(null);
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+    };
+
+    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mouseup', handleMouseUp);
+  };
+
   // Función para renderizar el contenido de una celda según la columna
-  const renderCell = (category: Category, columnKey: string) => {
+  const renderCell = (category: Category, columnKey: string, width: number) => {
+    const cellStyle = { width: `${width}px`, minWidth: '80px' };
+
     switch (columnKey) {
       case 'nombre':
-        return <td key={columnKey} style={{ fontWeight: 500 }}>{category.nombre}</td>;
+        return <td key={columnKey} style={{ ...cellStyle, fontWeight: 500 }}>{category.nombre}</td>;
       case 'icono':
         return (
-          <td key={columnKey}>
+          <td key={columnKey} style={cellStyle}>
             <div className="icon-circle-gradient">
               <svg
                 width="14"
@@ -110,17 +168,17 @@ export default function Bakanes() {
         );
       case 'estado':
         return (
-          <td key={columnKey}>
+          <td key={columnKey} style={cellStyle}>
             <span className="status-badge-active">{category.estado}</span>
           </td>
         );
       case 'descripcion':
-        return <td key={columnKey} style={{ maxWidth: "400px" }}>{category.descripcion}</td>;
+        return <td key={columnKey} style={{ ...cellStyle, maxWidth: "400px" }}>{category.descripcion}</td>;
       case 'fecha':
-        return <td key={columnKey}>{category.fecha}</td>;
+        return <td key={columnKey} style={cellStyle}>{category.fecha}</td>;
       case 'acciones':
         return (
-          <td key={columnKey}>
+          <td key={columnKey} style={cellStyle}>
             <div className="action-buttons-container">
               <button className="action-icon-button" title="Editar">
                 <svg
@@ -176,11 +234,11 @@ export default function Bakanes() {
           </td>
         );
       default:
-        return <td key={columnKey}></td>;
+        return <td key={columnKey} style={cellStyle}></td>;
     }
   };
 
-  // useEffect para manejar clics fuera del dropdown
+  // useEffect para manejar clics fuera del dropdown y guardar anchos en localStorage
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as Element;
@@ -190,10 +248,14 @@ export default function Bakanes() {
     };
 
     document.addEventListener('mousedown', handleClickOutside);
+
+    // Guardar anchos en localStorage cuando cambien
+    localStorage.setItem('bakanes-column-widths', JSON.stringify(columnWidths));
+
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, []);
+  }, [columnWidths]);
 
   return (
     <div className="bakanes-container">
@@ -300,50 +362,73 @@ export default function Bakanes() {
 
       {/* Table */}
       <div className="bakanes-table-wrapper">
-        <table className="bakanes-table">
-          <thead>
-            <tr>
-              {columnOrder.map((columnKey) => (
-                <th key={columnKey}>
-                  <div className="th-container">
-                    <span>{columnDefinitions[columnKey].label}</span>
-                    <div className="column-swap-container">
-                      <button
-                        className="column-swap-button"
-                        title="Intercambiar columna"
-                        onClick={() => setOpenDropdownId(openDropdownId === columnKey ? null : columnKey)}
-                      >
-                        <MdSwapVert size={16} />
-                      </button>
-                      {openDropdownId === columnKey && (
-                        <div className="column-swap-dropdown">
-                          {columnOrder
-                            .filter(col => col !== columnKey)
-                            .map(col => (
-                              <button
-                                key={col}
-                                className="column-swap-dropdown-item"
-                                onClick={() => swapColumns(columnKey, col)}
-                              >
-                                Intercambiar con "{columnDefinitions[col].label}"
-                              </button>
-                            ))}
-                        </div>
-                      )}
+        <div className="table-container">
+          <table className="bakanes-table">
+            <thead>
+              <tr>
+                {columnOrder.map((columnKey, index) => (
+                  <th
+                    key={columnKey}
+                    // Agregamos position: relative aquí para contener el resizer
+                    style={{
+                      width: `${columnWidths[columnKey] || 150}px`,
+                      minWidth: '80px',
+                      position: 'relative'
+                    }}
+                  >
+                    <div className="th-container">
+                      <span>{columnDefinitions[columnKey].label}</span>
+                      <div className="column-swap-container">
+                        <button
+                          className="column-swap-button"
+                          title="Intercambiar columna"
+                          onClick={() => setOpenDropdownId(openDropdownId === columnKey ? null : columnKey)}
+                        >
+                          <MdSwapVert size={16} />
+                        </button>
+                        {openDropdownId === columnKey && (
+                          <div className="column-swap-dropdown">
+                            {columnOrder
+                              .filter(col => col !== columnKey)
+                              .map(col => (
+                                <button
+                                  key={col}
+                                  className="column-swap-dropdown-item"
+                                  onClick={() => swapColumns(columnKey, col)}
+                                >
+                                  Intercambiar con "{columnDefinitions[col].label}"
+                                </button>
+                              ))}
+                          </div>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {categories.map((category) => (
-              <tr key={category.id}>
-                {columnOrder.map((columnKey) => renderCell(category, columnKey))}
+
+                    {/* AQUÍ ESTÁ EL CAMBIO:
+                        El resizer va dentro del th.
+                        No mostramos resizer en la última columna para evitar scroll horizontal innecesario
+                    */}
+                    {index < columnOrder.length - 1 && (
+                      <div
+                        className={`resizer ${resizingColumn === columnKey ? 'is-resizing' : ''}`}
+                        onMouseDown={(e) => handleMouseDown(columnKey, e)}
+                      />
+                    )}
+                  </th>
+                ))}
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {categories.map((category) => (
+                <tr key={category.id}>
+                  {columnOrder.map((columnKey) => renderCell(category, columnKey, columnWidths[columnKey] || 150))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+
+
+        </div>
 
         {/* Pagination */}
         <div className="pagination-container">
