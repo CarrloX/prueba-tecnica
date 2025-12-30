@@ -1,24 +1,23 @@
 import React, { useState } from 'react'
 import './LoginForm.css'
 import { FiEye, FiEyeOff } from 'react-icons/fi'
-import useAuth from '../../hooks/useAuth'
+import { useAuthContext } from '../../contexts/AuthContext'
 import logo from '../../assets/logo.png'
 
-export default function LoginForm() {
-  const { login } = useAuth()
+interface LoginFormProps {
+  onLogin: () => void
+}
+
+export default function LoginForm({ onLogin }: LoginFormProps) {
+  const { login } = useAuthContext()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [show, setShow] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  const isEmailValid = /\S+@\S+\.\S+/.test(email)
-  const isPasswordValid = password.length >= 6
-  const isValid = isEmailValid && isPasswordValid
-  
-  // Calculate aria-invalid values as separate boolean variables
-  const emailIsInvalid = !isEmailValid && email.length > 0
-  const passwordIsInvalid = !isPasswordValid && password.length > 0
+  // Sin validación - acepta cualquier entrada
+  const isValid = email.length > 0 && password.length > 0
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -26,8 +25,8 @@ export default function LoginForm() {
     setLoading(true)
     setError(null)
     try {
-      await login({ email, password })
-      // success — in this technical demo we do not navigate
+      await login(email)
+      onLogin() // Navigate to backends page
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : 'Error de autenticación')
     } finally {
@@ -52,7 +51,6 @@ export default function LoginForm() {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           placeholder="Ingresar correo"
-          aria-invalid={emailIsInvalid ? true : undefined}
           required
         />
       </div>
@@ -67,7 +65,6 @@ export default function LoginForm() {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           placeholder="Ingresa tu contraseña"
-          aria-invalid={passwordIsInvalid ? true : undefined}
           required
         />
         <button type="button" className="bk-icon-btn" onClick={() => setShow((s) => !s)} aria-label="Mostrar contraseña">
