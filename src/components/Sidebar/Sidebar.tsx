@@ -14,26 +14,30 @@ import './Sidebar.css';
 
 interface SidebarProps {
   topbarHeight?: number
+  currentPage?: string
   onNavigate?: (section: string) => void
   onLogout?: () => void
 }
 
-const Sidebar = ({ topbarHeight = 60, onNavigate, onLogout }: SidebarProps) => {
+const Sidebar = ({ topbarHeight = 60, currentPage = 'home', onNavigate, onLogout }: SidebarProps) => {
   const menuItems = [
-    { name: 'Home', icon: <Home size={20} />, active: false },
-    { name: 'Impacto Social', icon: <TrendingUp size={20} />, active: false },
-    { name: 'Comunidad', icon: <Users size={20} />, active: false },
-    { name: 'Sponsors', icon: <DollarSign size={20} />, active: false },
-    { name: 'Marketplace', icon: <Store size={20} />, active: false },
-    { name: 'Bakanes', icon: <Award size={20} />, active: false },
-    { name: 'Contenidos', icon: <Files size={20} />, active: false },
-    { name: 'Categorias de acciones', icon: <Shapes size={20} />, active: false },
-  ];
+    { name: 'Home', icon: <Home size={20} />, implemented: true },
+    { name: 'Impacto Social', icon: <TrendingUp size={20} />, implemented: true },
+    { name: 'Comunidad', icon: <Users size={20} />, implemented: true },
+    { name: 'Sponsors', icon: <DollarSign size={20} />, implemented: true },
+    { name: 'Marketplace', icon: <Store size={20} />, implemented: true },
+    { name: 'Bakanes', icon: <Award size={20} />, implemented: true },
+    { name: 'Contenidos', icon: <Files size={20} />, implemented: true },
+    { name: 'Categorias de acciones', icon: <Shapes size={20} />, implemented: true },
+  ].map(item => ({
+    ...item,
+    active: item.name.toLowerCase().replace(/\s+/g, '-') === currentPage
+  }))
 
   const [showComingSoon, setShowComingSoon] = useState<string | null>(null)
 
-  const handleMenuClick = (item: { name: string; active: boolean }) => {
-    if (item.active) {
+  const handleMenuClick = (item: { name: string; implemented: boolean; active: boolean }) => {
+    if (item.implemented) {
       setShowComingSoon(null)
       onNavigate?.(item.name.toLowerCase().replace(/\s+/g, '-'))
     } else {
@@ -70,7 +74,7 @@ const Sidebar = ({ topbarHeight = 60, onNavigate, onLogout }: SidebarProps) => {
             </button>
 
             {/* Coming soon message */}
-            {showComingSoon === item.name && !item.active && (
+            {showComingSoon === item.name && !item.implemented && (
               <div className="coming-soon-tooltip">
                 Próximamente
               </div>

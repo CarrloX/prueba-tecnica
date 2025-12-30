@@ -9,7 +9,7 @@ interface TopBarProps {
 
 export default function TopBar({
   height = 60,
-  backgroundColor = '#6B46C1'
+  backgroundColor = '#1E1B4D'
 }: TopBarProps) {
   const { user } = useAuthContext()
 

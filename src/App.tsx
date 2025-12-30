@@ -1,6 +1,6 @@
 import './App.css'
 import './styles/variables.css'
-import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom'
+import { BrowserRouter as Router, Routes, Route, useNavigate, Navigate } from 'react-router-dom'
 import LoginModal from './components/LoginModal/LoginModal'
 import BackgroundImages from './components/BackgroundImages/BackgroundImages'
 import Backends from './pages/Backends'
@@ -16,15 +16,16 @@ function AppContent() {
 
   return (
     <div>
-      {!isAuthenticated && <BackgroundImages />}
-      {isAuthenticated ? (
-        <Routes>
-          <Route path="/backends" element={<Backends />} />
-          <Route path="/" element={<div />} /> {/* Default route */}
-        </Routes>
-      ) : (
-        <LoginModal onLogin={handleLogin} />
-      )}
+      <Routes>
+        <Route path="/login" element={
+          <div>
+            <BackgroundImages />
+            <LoginModal onLogin={handleLogin} />
+          </div>
+        } />
+        <Route path="/" element={isAuthenticated ? <Backends /> : <Navigate to="/login" />} />
+        <Route path="/backends/*" element={isAuthenticated ? <Backends /> : <Navigate to="/login" />} />
+      </Routes>
     </div>
   )
 }
