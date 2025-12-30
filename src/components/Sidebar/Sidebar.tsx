@@ -13,11 +13,12 @@ import {
 import './Sidebar.css';
 
 interface SidebarProps {
+  topbarHeight?: number
   onNavigate?: (section: string) => void
   onLogout?: () => void
 }
 
-const Sidebar = ({ onNavigate, onLogout }: SidebarProps) => {
+const Sidebar = ({ topbarHeight = 60, onNavigate, onLogout }: SidebarProps) => {
   const menuItems = [
     { name: 'Home', icon: <Home size={20} />, active: false },
     { name: 'Impacto Social', icon: <TrendingUp size={20} />, active: false },
@@ -43,7 +44,7 @@ const Sidebar = ({ onNavigate, onLogout }: SidebarProps) => {
   }
 
   return (
-    <aside className="sidebar">
+    <aside className="sidebar" style={{ top: `${topbarHeight}px`, height: `calc(100vh - ${topbarHeight}px)` }}>
       {/* --- CABECERA (IMAGEN PNG) --- */}
       <div className="sidebar-header">
         <img

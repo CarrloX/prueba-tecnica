@@ -8,6 +8,8 @@ export default function Backends() {
   const navigate = useNavigate()
   const { logout } = useAuthContext()
 
+  const topbarHeight = 65
+
   const handleNavigate = (section: string) => {
     console.log('Navigate to:', section)
     // Aquí puedes agregar la lógica de navegación más adelante
@@ -29,17 +31,17 @@ export default function Backends() {
       padding: 0,
       overflow: 'hidden'
     }}>
-      <TopBar />
+      <TopBar height={topbarHeight} />
 
-      <Sidebar onNavigate={handleNavigate} onLogout={handleLogout} />
+      <Sidebar topbarHeight={topbarHeight} onNavigate={handleNavigate} onLogout={handleLogout} />
 
       {/* Contenido principal - espacio blanco ajustado para sidebar */}
       <div style={{
         position: 'absolute',
-        top: '60px',
+        top: `${topbarHeight}px`,
         left: '300px',
         width: 'calc(100% - 300px)',
-        height: 'calc(100% - 60px)',
+        height: `calc(100% - ${topbarHeight}px)`,
         backgroundColor: 'white'
       }} />
     </div>
