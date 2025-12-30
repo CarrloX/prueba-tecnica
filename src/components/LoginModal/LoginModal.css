@@ -9,13 +9,20 @@
   padding: 2rem;
 }
 .bk-modal {
-  width: 520px;
-  max-width: 100%;
-  background: rgba(255,255,255,0.95);
-  border-radius: 8px;
-  padding: 2rem 2.25rem;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-  border: 2px solid #ff33cc33; /* subtle hint */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 48px 32px;
+  gap: 48px;
+  position: absolute;
+  width: 581px;
+  height: 595px;
+  left: calc(50% - 581px/2 + 0.5px);
+  top: calc(50% - 595px/2 - 1px);
+  background: #FFFFFF;
+  box-shadow: 0px 4px 8px 3px rgba(0, 0, 0, 0.15), 0px 1px 3px rgba(0, 0, 0, 0.3);
+  border-radius: 20px;
 }
 
 @media (max-width: 480px) {
