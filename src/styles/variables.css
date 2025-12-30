@@ -1,0 +1,12 @@
+:root{
+  --bk-primary:#5b46f1;
+  --bk-muted:#f3f3f3;
+  --bk-danger:#c41e1e;
+  --bk-radius:8px;
+}
+
+@media (prefers-color-scheme: dark){
+  :root{
+    --bk-primary:#7c6cff;
+  }
+}

@@ -1,0 +1,25 @@
+.bk-overlay {
+  position: fixed;
+  inset: 0;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 2rem;
+}
+.bk-modal {
+  width: 520px;
+  max-width: 100%;
+  background: rgba(255,255,255,0.95);
+  border-radius: 8px;
+  padding: 2rem 2.25rem;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  border: 2px solid #ff33cc33; /* subtle hint */
+}
+
+@media (max-width: 480px) {
+  .bk-modal {
+    padding: 1.25rem;
+  }
+}
