@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
 import { useAuthContext } from "../../contexts/AuthContext";
-import logo from "../../assets/logo.png";
+import logo from "../../assets/logo white.png";
 
 interface TopBarProps {
   height?: number;

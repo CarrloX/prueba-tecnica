@@ -39,6 +39,9 @@ export default function Bakanes() {
   // Resizing state for UI feedback
   const [resizingColumn, setResizingColumn] = useState<string | null>(null);
 
+  // Global cursor state for better UX during resize
+  const [globalCursor, setGlobalCursor] = useState<string>('');
+
   // Resizing ref to avoid stale closure issues
   const resizingRef = useRef<{
     column: string;
@@ -106,7 +109,11 @@ export default function Bakanes() {
 
   // Función para manejar el inicio del redimensionamiento
   const handleMouseDown = (column: string, event: React.MouseEvent) => {
+    if (!column || !columnWidths) return;
+
     event.preventDefault();
+    event.stopPropagation(); // Evita que se activen otros eventos
+
     const startX = event.clientX;
     const startWidth = columnWidths[column] || 150;
 
@@ -117,21 +124,31 @@ export default function Bakanes() {
       startWidth
     };
 
-    const handleMouseMove = (e: MouseEvent) => {
-      if (resizingRef.current) {
-        const diff = e.clientX - resizingRef.current.startX;
-        const newWidth = Math.max(80, resizingRef.current.startWidth + diff); // Mínimo 80px
+    // Cambiar cursor globalmente mientras se arrastra
+    setGlobalCursor('col-resize');
 
-        setColumnWidths(prev => ({
-          ...prev,
-          [resizingRef.current!.column]: newWidth
-        }));
+    const handleMouseMove = (e: MouseEvent) => {
+      if (resizingRef.current && resizingRef.current.column) {
+        // Usamos requestAnimationFrame para mejor rendimiento visual
+        requestAnimationFrame(() => {
+          const diff = e.clientX - resizingRef.current!.startX;
+          const newWidth = Math.max(80, resizingRef.current!.startWidth + diff); // Mínimo 80px
+
+          setColumnWidths(prev => {
+            if (!prev || !resizingRef.current?.column) return prev;
+            return {
+              ...prev,
+              [resizingRef.current.column]: newWidth
+            };
+          });
+        });
       }
     };
 
     const handleMouseUp = () => {
       resizingRef.current = null;
       setResizingColumn(null);
+      setGlobalCursor(''); // Restaurar cursor
       document.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('mouseup', handleMouseUp);
     };
@@ -238,7 +255,7 @@ export default function Bakanes() {
     }
   };
 
-  // useEffect para manejar clics fuera del dropdown y guardar anchos en localStorage
+  // useEffect para manejar clics fuera del dropdown
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as Element;
@@ -249,13 +266,15 @@ export default function Bakanes() {
 
     document.addEventListener('mousedown', handleClickOutside);
 
-    // Guardar anchos en localStorage cuando cambien
-    localStorage.setItem('bakanes-column-widths', JSON.stringify(columnWidths));
-
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [columnWidths]);
+  }, []);
+
+  // useEffect para aplicar cursor global
+  useEffect(() => {
+    document.body.style.cursor = globalCursor;
+  }, [globalCursor]);
 
   return (
     <div className="bakanes-container">
