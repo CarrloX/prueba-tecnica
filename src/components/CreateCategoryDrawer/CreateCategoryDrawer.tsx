@@ -4,11 +4,13 @@ import "./CreateCategoryDrawer.css";
 interface CreateCategoryDrawerProps {
   isOpen: boolean;
   onClose: () => void;
+  onCreate: (category: { nombre: string; descripcion: string; estado: "Activo" | "Inactivo" }) => void;
 }
 
 const CreateCategoryDrawer: React.FC<CreateCategoryDrawerProps> = ({
   isOpen,
   onClose,
+  onCreate,
 }) => {
   const [formData, setFormData] = useState({
     nombre: "",
@@ -16,6 +18,9 @@ const CreateCategoryDrawer: React.FC<CreateCategoryDrawerProps> = ({
     color: "",
     activo: true,
   });
+
+  // Check if form is valid (required fields filled)
+  const isFormValid = formData.nombre.trim() && formData.descripcion.trim();
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -31,6 +36,35 @@ const CreateCategoryDrawer: React.FC<CreateCategoryDrawerProps> = ({
   // Prevent click on drawer from closing it
   const handleDrawerClick = (e: React.MouseEvent) => {
     e.stopPropagation();
+  };
+
+  const handleCreate = () => {
+    // Validate required fields
+    if (!formData.nombre.trim() || !formData.descripcion.trim()) {
+      alert("Por favor complete todos los campos requeridos.");
+      return;
+    }
+
+    // Create category object
+    const newCategory = {
+      nombre: formData.nombre.trim(),
+      descripcion: formData.descripcion.trim(),
+      estado: formData.activo ? "Activo" as const : "Inactivo" as const,
+    };
+
+    // Call onCreate callback
+    onCreate(newCategory);
+
+    // Reset form
+    setFormData({
+      nombre: "",
+      descripcion: "",
+      color: "",
+      activo: true,
+    });
+
+    // Close drawer
+    onClose();
   };
 
   return (
@@ -173,7 +207,7 @@ const CreateCategoryDrawer: React.FC<CreateCategoryDrawerProps> = ({
           <button className="btn btn-cancel" onClick={onClose}>
             Cancelar
           </button>
-          <button className="btn btn-create">Crear</button>
+          <button className={`btn btn-create ${isFormValid ? 'active' : ''}`} onClick={handleCreate}>Crear</button>
         </div>
       </div>
     </div>

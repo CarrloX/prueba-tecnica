@@ -50,7 +50,7 @@ export default function Bakanes() {
   } | null>(null);
 
   // Sample data matching Figma design
-  const categories: Category[] = [
+  const [categories, setCategories] = useState<Category[]>([
     {
       id: 1,
       nombre: "Foto + descripción",
@@ -79,7 +79,23 @@ export default function Bakanes() {
       fecha: "Abr 10, 2024",
       estado: "Activo",
     },
-  ];
+  ]);
+
+  // Function to add a new category
+  const addCategory = (newCategory: Omit<Category, 'id' | 'fecha'>) => {
+    const id = categories.length > 0 ? Math.max(...categories.map(c => c.id)) + 1 : 1;
+    const fecha = new Date().toLocaleDateString('es-ES', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric'
+    });
+    const category: Category = {
+      ...newCategory,
+      id,
+      fecha
+    };
+    setCategories(prev => [...prev, category]);
+  };
 
   const totalItems = 40;
   const totalPages = Math.ceil(totalItems / itemsPerPage);
@@ -183,12 +199,14 @@ export default function Bakanes() {
             </div>
           </td>
         );
-      case 'estado':
+      case 'estado': {
+        const statusClass = category.estado === "Activo" ? "active" : "inactive";
         return (
           <td key={columnKey} style={cellStyle}>
-            <span className="status-badge-active">{category.estado}</span>
+            <span className={`status-badge-${statusClass}`}>{category.estado}</span>
           </td>
         );
+      }
       case 'descripcion':
         return <td key={columnKey} style={{ ...cellStyle, maxWidth: "400px" }}>{category.descripcion}</td>;
       case 'fecha':
@@ -544,6 +562,7 @@ export default function Bakanes() {
       <CreateCategoryDrawer
         isOpen={isDrawerOpen}
         onClose={() => setIsDrawerOpen(false)}
+        onCreate={addCategory}
       />
     </div>
   );
