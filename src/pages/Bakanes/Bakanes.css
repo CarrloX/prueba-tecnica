@@ -158,15 +158,17 @@
 
 .bakanes-table th {
   padding: 1rem 1.5rem;
-  text-align: left;
+  text-align: left; /* Explicitly left-aligned */
   font-size: 0.875rem;
   font-weight: 700;
-  text-transform: uppercase;
+  text-transform: capitalize;
   letter-spacing: 0.05em;
-  color: #111827;
+  color: #656268;
   background-color: #f9fafb;
   border-bottom: 1px solid #d1d5db;
   border-right: 1px solid #d1d5db;
+  line-height: 1.2;
+  vertical-align: middle;
 }
 
 .bakanes-table th:last-child {
@@ -177,12 +179,8 @@
   padding: 1rem 1.5rem;
   font-size: 0.875rem;
   color: #000000 !important;
-  border-bottom: 1px solid #d1d5db;
-  border-right: 1px solid #d1d5db;
-}
-
-.bakanes-table td:last-child {
-  border-right: none;
+  border: none;
+  text-align: left; /* Explicitly left-aligned */
 }
 
 .bakanes-table tr:hover {
@@ -191,14 +189,14 @@
 
 /* Specific elements */
 .icon-circle-gradient {
-  width: 2.5rem;
-  height: 2.5rem;
-  border-radius: 9999px;
-  background: linear-gradient(to bottom right, #f472b6, #a78bfa);
+  width: 22px;
+  height: 22px;
+  border-radius: 4px; /* Slightly more rounded for the larger size */
+  background-color: #e995b7;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0 auto;
+  margin: 0; /* Align to the left instead of center */
 }
 
 .status-badge-active {
@@ -217,7 +215,7 @@
 .action-buttons-container {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start; /* Align to the left */
   gap: 1rem;
 }
 
@@ -236,15 +234,58 @@
 .pagination-container {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 1rem 1.5rem;
+  justify-content: center; /* Centering as requested */
+  gap: 8rem; /* Significantly increased spacing between results and nav */
+  padding: 1.5rem;
   background-color: white;
   border-top: 1px solid #e5e7eb;
 }
 
+.results-per-page-group {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem; /* Space between "Resultados por página" and the select */
+}
+
+.pagination-nav {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.pagination-arrows-group {
+  display: flex;
+  gap: 2rem; /* Increased separation as requested */
+}
+
+.pagination-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #6b7280; /* text-gray-500 */
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0.25rem;
+  transition: color 0.2s;
+}
+
+.pagination-arrow:hover:not(:disabled) {
+  color: #111827; /* text-gray-900 */
+}
+
+.pagination-arrow:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
 .results-per-page-select {
-  padding: 0.25rem 0.75rem;
+  padding: 0.25rem;
   border: 1px solid #d1d5db;
   border-radius: 0.25rem;
   outline: none;
+  background-color: white !important;
+  color: #111827 !important; /* text-gray-900 */
+  cursor: pointer;
+  border-color: #a6a4a8;
 }
