@@ -1,17 +1,10 @@
 import { useState, useEffect, useRef } from "react";
 import { MdSwapVert } from "react-icons/md";
 import CreateCategoryDrawer from "../../components/CreateCategoryDrawer/CreateCategoryDrawer";
+import { categoriesService, type Category } from "../../services/categoriesService";
 import "./Bakanes.css";
 
 type Tab = "categorias" | "tipos" | "evidencias";
-
-interface Category {
-  id: number;
-  nombre: string;
-  descripcion: string;
-  fecha: string;
-  estado: "Activo" | "Inactivo";
-}
 
 export default function Bakanes() {
   const [activeTab, setActiveTab] = useState<Tab>("categorias");
@@ -20,6 +13,11 @@ export default function Bakanes() {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
+
+  // API states
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   // Column order state for reordering columns
   const [columnOrder, setColumnOrder] = useState<string[]>([
@@ -49,52 +47,36 @@ export default function Bakanes() {
     startWidth: number;
   } | null>(null);
 
-  // Sample data matching Figma design
-  const [categories, setCategories] = useState<Category[]>([
-    {
-      id: 1,
-      nombre: "Foto + descripción",
-      descripcion: "Realizar actividad física al menos 30 minutos cada día",
-      fecha: "Abr 3, 2024",
-      estado: "Activo",
-    },
-    {
-      id: 2,
-      nombre: "Video + descripción",
-      descripcion: "Preparar comidas saludables en casa",
-      fecha: "Abr 5, 2024",
-      estado: "Activo",
-    },
-    {
-      id: 3,
-      nombre: "Audio + texto",
-      descripcion: "Mantener un diario de gratitud diario",
-      fecha: "Abr 7, 2024",
-      estado: "Inactivo",
-    },
-    {
-      id: 4,
-      nombre: "Solo descripción",
-      descripcion: "Leer al menos 20 páginas de un libro",
-      fecha: "Abr 10, 2024",
-      estado: "Activo",
-    },
-  ]);
+  // Function to add a new category using API
+  const addCategory = async (newCategory: Omit<Category, 'id' | 'fecha'>) => {
+    try {
+      const createdCategory = await categoriesService.createCategory(newCategory);
+      setCategories(prev => [...prev, createdCategory]);
+      setError(null); // Clear any previous errors
+    } catch (err) {
+      console.error('Error creating category:', err);
+      setError('Error al crear la categoría');
+    }
+  };
 
-  // Function to add a new category
-  const addCategory = (newCategory: Omit<Category, 'id' | 'fecha'>) => {
-    const id = categories.length > 0 ? Math.max(...categories.map(c => c.id)) + 1 : 1;
-    const fecha = new Date().toLocaleDateString('es-ES', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric'
-    });
-    const category: Category = {
-      ...newCategory,
-      id,
-      fecha
-    };
-    setCategories(prev => [...prev, category]);
+  // Function to delete a category
+  const deleteCategory = async (id: number) => {
+    if (window.confirm('¿Estás seguro de que quieres eliminar esta categoría?')) {
+      try {
+        await categoriesService.deleteCategory(id);
+        setCategories(prev => prev.filter(cat => cat.id !== id));
+        setError(null); // Clear any previous errors
+      } catch (err) {
+        console.error('Error deleting category:', err);
+        setError('Error al eliminar la categoría');
+      }
+    }
+  };
+
+  // Function to handle edit (placeholder for now)
+  const editCategory = (category: Category) => {
+    // TODO: Implement edit functionality
+    alert(`Editar categoría: ${category.nombre}\n\nFuncionalidad en desarrollo...`);
   };
 
   const totalItems = 40;
@@ -215,7 +197,11 @@ export default function Bakanes() {
         return (
           <td key={columnKey} style={cellStyle}>
             <div className="action-buttons-container">
-              <button className="action-icon-button" title="Editar">
+              <button
+                className="action-icon-button"
+                title="Editar"
+                onClick={() => editCategory(category)}
+              >
                 <svg
                   width="20"
                   height="20"
@@ -229,7 +215,11 @@ export default function Bakanes() {
                   />
                 </svg>
               </button>
-              <button className="action-icon-button" title="Eliminar">
+              <button
+                className="action-icon-button"
+                title="Eliminar"
+                onClick={() => deleteCategory(category.id)}
+              >
                 <svg
                   width="20"
                   height="20"
@@ -272,6 +262,25 @@ export default function Bakanes() {
         return <td key={columnKey} style={cellStyle}></td>;
     }
   };
+
+  // Fetch categories on component mount
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        const fetchedCategories = await categoriesService.getAllCategories();
+        setCategories(fetchedCategories);
+      } catch (err) {
+        console.error('Error fetching categories:', err);
+        setError('Error al cargar las categorías');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCategories();
+  }, []);
 
   // useEffect para manejar clics fuera del dropdown
   useEffect(() => {
@@ -399,72 +408,111 @@ export default function Bakanes() {
 
       {/* Table */}
       <div className="bakanes-table-wrapper">
+        {error && (
+          <div className="error-message" style={{
+            color: 'red',
+            textAlign: 'center',
+            padding: '20px',
+            backgroundColor: '#fee',
+            border: '1px solid #fcc',
+            borderRadius: '4px',
+            marginBottom: '20px'
+          }}>
+            {error}
+          </div>
+        )}
+
         <div className="table-container">
-          <table className="bakanes-table">
-            <thead>
-              <tr>
-                {columnOrder.map((columnKey, index) => (
-                  <th
-                    key={columnKey}
-                    // Agregamos position: relative aquí para contener el resizer
-                    style={{
-                      width: `${columnWidths[columnKey] || 150}px`,
-                      minWidth: '80px',
-                      position: 'relative'
-                    }}
-                  >
-                    <div className="th-container">
-                      <span>{columnDefinitions[columnKey].label}</span>
-                      <div className="column-swap-container">
-                        <button
-                          className="column-swap-button"
-                          title="Intercambiar columna"
-                          onClick={() => setOpenDropdownId(openDropdownId === columnKey ? null : columnKey)}
-                        >
-                          <MdSwapVert size={16} />
-                        </button>
-                        {openDropdownId === columnKey && (
-                          <div className="column-swap-dropdown">
-                            {columnOrder
-                              .filter(col => col !== columnKey)
-                              .map(col => (
-                                <button
-                                  key={col}
-                                  className="column-swap-dropdown-item"
-                                  onClick={() => swapColumns(columnKey, col)}
-                                >
-                                  Intercambiar con "{columnDefinitions[col].label}"
-                                </button>
-                              ))}
-                          </div>
-                        )}
+          {loading ? (
+            <div style={{
+              textAlign: 'center',
+              padding: '40px',
+              fontSize: '16px',
+              color: '#666'
+            }}>
+              Cargando categorías...
+            </div>
+          ) : (
+            <table className="bakanes-table">
+              <thead>
+                <tr>
+                  {columnOrder.map((columnKey, index) => (
+                    <th
+                      key={columnKey}
+                      // Agregamos position: relative aquí para contener el resizer
+                      style={{
+                        width: `${columnWidths[columnKey] || 150}px`,
+                        minWidth: '80px',
+                        position: 'relative'
+                      }}
+                    >
+                      <div className="th-container">
+                        <span>{columnDefinitions[columnKey].label}</span>
+                        <div className="column-swap-container">
+                          <button
+                            className="column-swap-button"
+                            title="Intercambiar columna"
+                            onClick={() => setOpenDropdownId(openDropdownId === columnKey ? null : columnKey)}
+                          >
+                            <MdSwapVert size={16} />
+                          </button>
+                          {openDropdownId === columnKey && (
+                            <div className="column-swap-dropdown">
+                              {columnOrder
+                                .filter(col => col !== columnKey)
+                                .map(col => (
+                                  <button
+                                    key={col}
+                                    className="column-swap-dropdown-item"
+                                    onClick={() => swapColumns(columnKey, col)}
+                                  >
+                                    Intercambiar con "{columnDefinitions[col].label}"
+                                  </button>
+                                ))}
+                            </div>
+                          )}
+                        </div>
                       </div>
-                    </div>
 
-                    {/* AQUÍ ESTÁ EL CAMBIO:
-                        El resizer va dentro del th.
-                        No mostramos resizer en la última columna para evitar scroll horizontal innecesario
-                    */}
-                    {index < columnOrder.length - 1 && (
-                      <div
-                        className={`resizer ${resizingColumn === columnKey ? 'is-resizing' : ''}`}
-                        onMouseDown={(e) => handleMouseDown(columnKey, e)}
-                      />
-                    )}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {categories.map((category) => (
-                <tr key={category.id}>
-                  {columnOrder.map((columnKey) => renderCell(category, columnKey, columnWidths[columnKey] || 150))}
+                      {/* AQUÍ ESTÁ EL CAMBIO:
+                          El resizer va dentro del th.
+                          No mostramos resizer en la última columna para evitar scroll horizontal innecesario
+                      */}
+                      {index < columnOrder.length - 1 && (
+                        <div
+                          className={`resizer ${resizingColumn === columnKey ? 'is-resizing' : ''}`}
+                          onMouseDown={(e) => handleMouseDown(columnKey, e)}
+                        />
+                      )}
+                    </th>
+                  ))}
                 </tr>
-              ))}
-            </tbody>
-          </table>
-
-
+              </thead>
+              <tbody>
+                {categories.length === 0 ? (
+                  <tr>
+                    <td
+                      colSpan={columnOrder.length}
+                      style={{
+                        textAlign: 'center',
+                        padding: '40px',
+                        color: '#666',
+                        fontStyle: 'italic'
+                      }}
+                    >
+                      No hay categorías disponibles
+                    </td>
+                  </tr>
+                ) : (
+                  categories.map((category) => (
+                    <tr key={category.id}>
+                      {columnOrder.map((columnKey) => renderCell(category, columnKey, columnWidths[columnKey] || 150))}
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          )}
         </div>
 
         {/* Pagination */}
