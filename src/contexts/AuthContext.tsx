@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState } from 'react'
 import type { ReactNode } from 'react'
 
 interface User {
+  id: number
   email: string
 }
 
@@ -29,9 +30,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (!response.ok) {
       throw new Error('Error en el login')
     }
-    // Asumimos que devuelve UserBasicResponse con email
+    // Respuesta incluye id y email del usuario
     const userData = await response.json()
-    setUser({ email: userData.email })
+    setUser({ id: userData.id, email: userData.email })
   }
 
   const register = async (email: string, password: string) => {
@@ -45,9 +46,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (!response.ok) {
       throw new Error('Error en el registro')
     }
-    // Asumimos que UserBasicResponse tiene email
+    // Respuesta incluye id y email del usuario
     const userData = await response.json()
-    setUser({ email: userData.email })
+    setUser({ id: userData.id, email: userData.email })
   }
 
   const logout = () => {

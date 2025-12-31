@@ -2,11 +2,14 @@ import { useState, useEffect, useRef } from "react";
 import { MdSwapVert } from "react-icons/md";
 import CreateCategoryDrawer from "../../components/CreateCategoryDrawer/CreateCategoryDrawer";
 import { categoriesService, type Category } from "../../services/categoriesService";
+import { useAuthContext } from "../../contexts/AuthContext";
 import "./Bakanes.css";
 
 type Tab = "categorias" | "tipos" | "evidencias";
 
 export default function Bakanes() {
+  const { user, isAuthenticated } = useAuthContext();
+
   const [activeTab, setActiveTab] = useState<Tab>("categorias");
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -49,8 +52,13 @@ export default function Bakanes() {
 
   // Function to add a new category using API
   const addCategory = async (newCategory: Omit<Category, 'id' | 'fecha'>) => {
+    if (!user) {
+      setError('Usuario no autenticado');
+      return;
+    }
+
     try {
-      const createdCategory = await categoriesService.createCategory(newCategory);
+      const createdCategory = await categoriesService.createCategory(newCategory, user.id);
       setCategories(prev => [...prev, createdCategory]);
       setError(null); // Clear any previous errors
     } catch (err) {
@@ -61,9 +69,14 @@ export default function Bakanes() {
 
   // Function to delete a category
   const deleteCategory = async (id: number) => {
+    if (!user) {
+      setError('Usuario no autenticado');
+      return;
+    }
+
     if (window.confirm('¿Estás seguro de que quieres eliminar esta categoría?')) {
       try {
-        await categoriesService.deleteCategory(id);
+        await categoriesService.deleteCategory(id, user.id);
         setCategories(prev => prev.filter(cat => cat.id !== id));
         setError(null); // Clear any previous errors
       } catch (err) {
@@ -263,13 +276,19 @@ export default function Bakanes() {
     }
   };
 
-  // Fetch categories on component mount
+  // Fetch categories on component mount and when user changes
   useEffect(() => {
     const fetchCategories = async () => {
+      if (!user) {
+        setCategories([]);
+        setLoading(false);
+        return;
+      }
+
       try {
         setLoading(true);
         setError(null);
-        const fetchedCategories = await categoriesService.getAllCategories();
+        const fetchedCategories = await categoriesService.getAllCategories(user.id);
         setCategories(fetchedCategories);
       } catch (err) {
         console.error('Error fetching categories:', err);
@@ -280,7 +299,7 @@ export default function Bakanes() {
     };
 
     fetchCategories();
-  }, []);
+  }, [user]);
 
   // useEffect para manejar clics fuera del dropdown
   useEffect(() => {
