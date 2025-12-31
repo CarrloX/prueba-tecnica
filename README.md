@@ -1,11 +1,34 @@
-# React + TypeScript + Vite
+# Prueba Técnica - Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Aplicación React + TypeScript + Vite para gestión de categorías y autenticación.
 
-Currently, two official plugins are available:
+## 🚀 Despliegue en Vercel
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### Variables de Entorno
+
+La aplicación requiere la siguiente variable de entorno en Vercel:
+
+- `VITE_API_BASE_URL`: URL base de la API (ej: `https://tu-api-en-produccion.com`)
+
+### Configuración en Vercel
+
+1. Ve a tu proyecto en Vercel
+2. Settings → Environment Variables
+3. Agrega: `VITE_API_BASE_URL` con el valor de producción
+4. Redeploy para aplicar los cambios
+
+### Archivos de Configuración
+
+- `.env.example`: Ejemplo de variables de entorno para desarrollo local
+- Los archivos `.env` están ignorados por git y no se suben al repositorio
+
+## 🛠️ Desarrollo Local
+
+1. Clona el repositorio
+2. Copia `.env.example` a `.env`
+3. Configura `VITE_API_BASE_URL` en `.env`
+4. Instala dependencias: `npm install`
+5. Ejecuta el servidor: `npm run dev`
 
 ## React Compiler
 

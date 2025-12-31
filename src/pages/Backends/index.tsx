@@ -1,4 +1,3 @@
-import React from 'react'
 import { useNavigate, useLocation, Routes, Route } from 'react-router-dom'
 import { useAuthContext } from '../../contexts/AuthContext'
 import TopBar from '../../components/TopBar/TopBar'

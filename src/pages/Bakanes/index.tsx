@@ -8,7 +8,7 @@ import "./Bakanes.css";
 type Tab = "categorias" | "tipos" | "evidencias";
 
 export default function Bakanes() {
-  const { user, isAuthenticated } = useAuthContext();
+  const { user } = useAuthContext();
 
   const [activeTab, setActiveTab] = useState<Tab>("categorias");
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -559,6 +559,7 @@ export default function Bakanes() {
                 onClick={() => setCurrentPage(1)}
                 disabled={currentPage === 1}
                 className="pagination-arrow"
+                title="Ir a la primera página"
               >
                 <svg
                   width="16"
@@ -575,6 +576,7 @@ export default function Bakanes() {
                 onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
                 disabled={currentPage === 1}
                 className="pagination-arrow"
+                title="Página anterior"
               >
                 <svg
                   width="16"
@@ -593,6 +595,7 @@ export default function Bakanes() {
                 }
                 disabled={currentPage === totalPages}
                 className="pagination-arrow"
+                title="Página siguiente"
               >
                 <svg
                   width="16"
@@ -609,6 +612,7 @@ export default function Bakanes() {
                 onClick={() => setCurrentPage(totalPages)}
                 disabled={currentPage === totalPages}
                 className="pagination-arrow"
+                title="Ir a la última página"
               >
                 <svg
                   width="16"

@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import { useMemo } from "react";
 import { useAuthContext } from "../../contexts/AuthContext";
 import logo from "../../assets/logo white.png";
 

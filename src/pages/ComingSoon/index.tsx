@@ -1,5 +1,3 @@
-import React from 'react'
-
 export default function ComingSoon() {
   return (
     <div style={{ padding: '20px', textAlign: 'center' }}>
