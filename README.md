@@ -1,96 +1,148 @@
-# Prueba Técnica - Frontend
+# Prueba Técnica - Gestión de Categorías
 
-Aplicación React + TypeScript + Vite para gestión de categorías y autenticación.
+Aplicación web para gestión de categorías con autenticación de usuarios, desarrollada con React, TypeScript y Vite.
 
-## 🚀 Despliegue en Vercel
+## 🌐 URLs de Producción
+
+- **Frontend:** https://prueba-tecnica-drab.vercel.app/login
+- **API Documentation (Swagger):** https://tekniko-latest.onrender.com/api/v1/swagger-ui/index.html#/
+
+> ⚠️ **Nota importante:** La API en Render puede tardar aproximadamente 5 minutos en activarse después de periodos de inactividad.
+
+## 🚀 Inicio Rápido
+
+### Prerrequisitos
+
+- Node.js (versión 18 o superior)
+- npm o yarn
+- API backend corriendo (localmente o en Render)
+
+### Instalación y Configuración
+
+1. **Clona el repositorio:**
+   ```bash
+   git clone https://github.com/CarrloX/prueba-tecnica.git
+   cd prueba-tecnica
+   ```
+
+2. **Instala las dependencias:**
+   ```bash
+   npm install
+   ```
+
+3. **Configura las variables de entorno:**
+   ```bash
+   cp .env.example .env
+   ```
+
+   Edita el archivo `.env` y configura:
+   ```env
+   # Para desarrollo local
+   VITE_API_BASE_URL=http://localhost:8080
+
+   # Para producción (cuando uses la API en Render)
+   # VITE_API_BASE_URL=https://tekniko-latest.onrender.com
+   ```
+
+4. **Ejecuta la aplicación en modo desarrollo:**
+   ```bash
+   npm run dev
+   ```
+
+   La aplicación estará disponible en `http://localhost:5173`
+
+## 📜 Scripts Disponibles
+
+- `npm run dev` - Inicia el servidor de desarrollo
+- `npm run build` - Construye la aplicación para producción
+- `npm run preview` - Vista previa de la build de producción
+- `npm run lint` - Ejecuta ESLint para verificar código
+
+## 🏗️ Arquitectura y Tecnologías
+
+### Stack Tecnológico Completo
+
+#### Frontend
+- **Framework:** React 19 con TypeScript
+- **Build Tool:** Vite
+- **Styling:** Tailwind CSS
+- **Icons:** React Icons y Lucide React
+- **Routing:** React Router DOM
+- **State Management:** React Context API
+
+#### Backend
+- **Framework:** Spring Boot (Java)
+- **Contenedor:** Docker
+- **Despliegue:** Render
+- **API:** RESTful con documentación Swagger
+
+### Estructura del Proyecto
+
+```
+src/
+├── components/          # Componentes reutilizables
+│   ├── LoginForm/      # Formulario de login
+│   ├── Sidebar/        # Navegación lateral
+│   ├── TopBar/         # Barra superior
+│   └── ...
+├── contexts/           # Context API para estado global
+│   └── AuthContext.tsx # Gestión de autenticación
+├── pages/              # Páginas principales
+│   ├── Home/          # Página de inicio
+│   ├── Bakanes/       # Gestión de categorías
+│   └── ...
+├── services/           # Servicios para llamadas a API
+│   └── categoriesService.ts
+└── utils/              # Utilidades
+```
+
+## 🔧 Configuración de Producción
+
+### Despliegue en Vercel
+
+1. **Conecta tu repositorio de GitHub a Vercel**
+2. **Configura las variables de entorno:**
+   - Ve a Settings → Environment Variables
+   - Agrega: `VITE_API_BASE_URL=https://tekniko-latest.onrender.com`
+3. **Deploy automático:** Vercel detectará cambios en el repositorio y redeployeará automáticamente
 
 ### Variables de Entorno
 
-La aplicación requiere la siguiente variable de entorno en Vercel:
+| Variable | Descripción | Ejemplo |
+|----------|-------------|---------|
+| `VITE_API_BASE_URL` | URL base de la API backend | `https://tekniko-latest.onrender.com` |
 
-- `VITE_API_BASE_URL`: URL base de la API (ej: `https://tu-api-en-produccion.com`)
+## 🤔 Decisiones Técnicas y Supuestos
 
-### Configuración en Vercel
+### Arquitectura
+- **Separación de responsabilidades:** Servicios dedicados para llamadas a API, Context API para estado global
+- **TypeScript estricto:** Para mayor robustez y mejor experiencia de desarrollo
+- **Componentes modulares:** Estructura organizada por funcionalidad
 
-1. Ve a tu proyecto en Vercel
-2. Settings → Environment Variables
-3. Agrega: `VITE_API_BASE_URL` con el valor de producción
-4. Redeploy para aplicar los cambios
+### UI/UX
+- **Tailwind CSS:** Para desarrollo rápido de estilos consistentes
+- **Responsive Design:** Optimizado para desktop y mobile
+- **Accesibilidad:** Cumple con estándares WCAG (botones con títulos descriptivos, navegación por teclado)
 
-### Archivos de Configuración
+### Autenticación
+- **JWT-based:** Sistema de autenticación stateless
+- **Context API:** Gestión centralizada del estado de autenticación
+- **Protección de rutas:** Redirección automática para usuarios no autenticados
 
-- `.env.example`: Ejemplo de variables de entorno para desarrollo local
-- Los archivos `.env` están ignorados por git y no se suben al repositorio
+### API Integration
+- **Fetch API nativo:** Sin librerías adicionales para HTTP requests
+- **Error handling:** Manejo robusto de errores de red y respuestas de API
+- **Headers personalizados:** Envío de user ID en requests de categorías
 
-## 🛠️ Desarrollo Local
+### Supuestos
+- La API backend está disponible y sigue el contrato definido
+- Los usuarios tienen conexión a internet estable
+- El navegador soporta ES6+ features modernos
+- Las credenciales de usuario son válidas en el backend
 
-1. Clona el repositorio
-2. Copia `.env.example` a `.env`
-3. Configura `VITE_API_BASE_URL` en `.env`
-4. Instala dependencias: `npm install`
-5. Ejecuta el servidor: `npm run dev`
+## 📝 Notas Adicionales
 
-## React Compiler
-
-The React Compiler is currently not compatible with SWC. See [this issue](https://github.com/vitejs/vite-plugin-react/issues/428) for tracking the progress.
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
-
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+- La aplicación está optimizada para rendimiento con Vite
+- ESLint está configurado para mantener calidad de código
+- Los archivos `.env` están ignorados por git por seguridad
+- El proyecto usa TypeScript para type safety
