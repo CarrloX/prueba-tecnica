@@ -38,6 +38,8 @@ const CreateCategoryDrawer: React.FC<CreateCategoryDrawerProps> = ({
     e.stopPropagation();
   };
 
+
+
   const handleCreate = () => {
     // Validate required fields
     if (!formData.nombre.trim() || !formData.descripcion.trim()) {
@@ -80,7 +82,7 @@ const CreateCategoryDrawer: React.FC<CreateCategoryDrawerProps> = ({
           <h2 id="drawer-title" className="drawer-title">
             Crear categoria
           </h2>
-          <button className="close-button" onClick={onClose}>
+          <button className="close-button" onClick={onClose} aria-label="Cerrar">
             <svg
               width="14"
               height="14"
@@ -142,7 +144,7 @@ const CreateCategoryDrawer: React.FC<CreateCategoryDrawerProps> = ({
               tabIndex={0}
               aria-label="Cargar archivo"
             >
-              <span style={{ color: "#aaa" }}>Carga archivo</span>
+              <span className="upload-placeholder">Carga archivo</span>
               <svg
                 className="upload-icon"
                 width="16"
@@ -187,19 +189,15 @@ const CreateCategoryDrawer: React.FC<CreateCategoryDrawerProps> = ({
 
           {/* Active Toggle */}
           <div className="toggle-container">
-            <div
-              className={`toggle-switch ${formData.activo ? "active" : ""}`}
-              onClick={handleToggle}
-              role="switch"
-              aria-checked={formData.activo}
-              tabIndex={0}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" || e.key === " ") handleToggle();
-              }}
-            >
-              <div className="toggle-slider"></div>
-            </div>
-            <span className="toggle-label">Activo</span>
+            <input
+              type="checkbox"
+              id="activo-toggle"
+              className="toggle-switch"
+              checked={formData.activo}
+              onChange={handleToggle}
+              aria-label="Estado de la categoría"
+            />
+            <label htmlFor="activo-toggle" className="toggle-label">Activo</label>
           </div>
         </div>
 

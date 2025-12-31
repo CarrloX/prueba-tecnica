@@ -135,6 +135,10 @@
   opacity: 0.6;
 }
 
+.upload-placeholder {
+  color: #aaa;
+}
+
 .toggle-container {
   display: flex;
   align-items: center;
@@ -142,7 +146,7 @@
   margin-top: 10px;
 }
 
-.toggle-switch {
+input[type="checkbox"].toggle-switch {
   position: relative;
   width: 44px;
   height: 24px;
@@ -150,13 +154,17 @@
   border-radius: 12px;
   cursor: pointer;
   transition: background-color 0.3s;
+  appearance: none;
+  outline: none;
+  margin: 0;
 }
 
-.toggle-switch.active {
+input[type="checkbox"].toggle-switch:checked {
   background-color: #00ced1; /* Teal/Cyan color */
 }
 
-.toggle-slider {
+input[type="checkbox"].toggle-switch::before {
+  content: '';
   position: absolute;
   top: 2px;
   left: 2px;
@@ -167,7 +175,7 @@
   transition: transform 0.3s;
 }
 
-.toggle-switch.active .toggle-slider {
+input[type="checkbox"].toggle-switch:checked::before {
   transform: translateX(20px);
 }
 
