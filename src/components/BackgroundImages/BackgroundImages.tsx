@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import "./BackgroundImages.css";
 
 // Paleta base (pueden ser colores fuertes, la capa blanca los suavizará)
 const PALETTE = [
@@ -28,14 +29,14 @@ const SHAPE_TYPES = [
 
 interface Shape {
   id: string;
+  type: string;
   width: number;
   height: number;
   left: number;
   top: number;
   background: string;
   borderRadius: string;
-  rotation: number;
-}
+} 
 
 interface BackgroundImagesProps {
   applyBlur?: boolean;
@@ -156,73 +157,115 @@ const BackgroundImages: React.FC<BackgroundImagesProps> = ({
 
       const newShape: Shape = {
         id: `shape-${attempts}`,
+        type,
         width,
         height,
         left,
         top,
         background: color,
         borderRadius,
-        rotation: Math.random() * 360,
-      };
+      }; 
 
       if (!checkCollision(newShape, generatedShapes)) {
         generatedShapes.push(newShape);
       }
     }
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setShapes(generatedShapes);
+     
+    // Avoid synchronous state updates directly inside effect to prevent cascading renders
+    requestAnimationFrame(() => setShapes(generatedShapes));
   }, [containerSize, colorPalette]);
+  // Generate a dynamic class for the container background color (no inline styles)
+  const bgClassName = React.useMemo(() => {
+    if (!backgroundColor) return null;
+    const hash = Array.from(backgroundColor).reduce((acc, c) => acc * 31 + c.charCodeAt(0), 0);
+    return `bg-images-bg-${Math.abs(hash)}`;
+  }, [backgroundColor]);
+
+  const bgStyleIdRef = useRef<string | null>(null);
+
+  useEffect(() => {
+    if (!bgClassName) return undefined;
+    const styleId = `style-${bgClassName}`;
+    bgStyleIdRef.current = styleId;
+
+    if (!document.getElementById(styleId)) {
+      const styleEl = document.createElement("style");
+      styleEl.id = styleId;
+      styleEl.textContent = `.${bgClassName} { background-color: ${backgroundColor}; }`;
+      document.head.appendChild(styleEl);
+
+      return () => {
+        const el = document.getElementById(styleId);
+        if (el) el.remove();
+      };
+    }
+
+    return undefined;
+  }, [bgClassName, backgroundColor]);
 
   return (
-    <div
-      ref={containerRef}
-      style={{
-        position: "absolute",
-        top: 0,
-        left: 0,
-        width: "100%",
-        height: "100%",
-        zIndex: 0, // Should be background
-        background: backgroundColor, // Fondo base configurable
-        overflow: "hidden",
-      }}
-    >
-      {/* 1. CAPA DE FORMAS */}
-      {shapes.map((shape) => (
-        <div
-          key={shape.id}
-          style={{
-            position: "absolute",
-            width: `${shape.width}px`,
-            height: `${shape.height}px`,
-            left: `${shape.left}px`,
-            top: `${shape.top}px`,
-            backgroundColor: shape.background,
-            borderRadius: shape.borderRadius,
-            transformOrigin: "center center",
-          }}
-        />
-      ))}
+    <div ref={containerRef} className={`background-images-container ${bgClassName || ""}`}>
+      {/* 1. CAPA DE FORMAS - renderizado SVG (evita estilos inline) */}
+      {containerSize.width > 0 && containerSize.height > 0 && (
+        <svg
+          className="background-shapes-svg"
+          width={containerSize.width}
+          height={containerSize.height}
+          xmlns="http://www.w3.org/2000/svg"
+          preserveAspectRatio="none"
+        >
+          {shapes.map((shape) => {
+            const cx = shape.left + shape.width / 2;
+            const cy = shape.top + shape.height / 2;
 
-      {/* 2. CAPA OVERLAY (La magia ocurre aquí) */}
+            switch (shape.type) {
+              case "circle":
+                return (
+                  <g key={shape.id}>
+                    <circle cx={cx} cy={cy} r={Math.min(shape.width, shape.height) / 2} fill={shape.background} />
+                  </g>
+                );
+              case "ellipse":
+              case "wide-ellipse":
+              case "tall-ellipse":
+                return (
+                  <g key={shape.id}>
+                    <ellipse cx={cx} cy={cy} rx={shape.width / 2} ry={shape.height / 2} fill={shape.background} />
+                  </g>
+                );
+              case "rounded-rectangle":
+                return (
+                  <g key={shape.id}>
+                    <rect x={shape.left} y={shape.top} width={shape.width} height={shape.height} rx={Math.min(20, shape.width / 6)} fill={shape.background} />
+                  </g>
+                );
+              case "semicircle-top":
+                return (
+                  <g key={shape.id}>
+                    <path d={`M ${shape.left} ${shape.top + shape.height} A ${shape.width / 2} ${shape.height} 0 0 1 ${shape.left + shape.width} ${shape.top + shape.height} L ${shape.left + shape.width} ${shape.top + shape.height} Z`} fill={shape.background} />
+                  </g>
+                );
+              case "semicircle-bottom":
+                return (
+                  <g key={shape.id}>
+                    <path d={`M ${shape.left} ${shape.top} A ${shape.width / 2} ${shape.height} 0 0 0 ${shape.left + shape.width} ${shape.top} L ${shape.left + shape.width} ${shape.top} Z`} fill={shape.background} />
+                  </g>
+                );
+              default:
+                return (
+                  <g key={shape.id}>
+                    <rect x={shape.left} y={shape.top} width={shape.width} height={shape.height} fill={shape.background} />
+                  </g>
+                );
+            }
+          })}
+        </svg>
+      )}
+
+      {/* 2. CAPA OVERLAY (ahora usando clases CSS) */}
       {(applyBlur || applyOverlay) && (
         <div
-          style={{
-            position: "absolute",
-            inset: 0, // Ocupa toda la pantalla
-
-            // A: COLOR BLANCO SEMI-TRANSPARENTE
-            // Ajusta el 0.6 (60%) hacia arriba para que sea más blanco, o hacia abajo para ver más color.
-            backgroundColor: applyOverlay
-              ? "rgba(255, 255, 255, 0)"
-              : "transparent",
-
-            // B: DESENFOQUE (Opcional)
-            // Esto crea el efecto "vidrio esmerilado" que difumina los bordes de las formas
-            backdropFilter: applyBlur ? "blur(1px)" : "none",
-
-            zIndex: 1, // Se asegura de estar encima de las formas
-          }}
+          className={`background-overlay ${applyBlur ? "background-overlay--blur" : ""} ${applyOverlay ? "background-overlay--on" : "background-overlay--off"}`}
         />
       )}
     </div>

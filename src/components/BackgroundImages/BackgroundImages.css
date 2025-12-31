@@ -1,0 +1,41 @@
+.background-images-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0; /* background */
+  overflow: hidden;
+  background-color: #f0f0f0ff; /* default fallback */
+}
+
+.background-shapes-svg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  display: block;
+  pointer-events: none;
+}
+
+.background-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background-color: transparent;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+
+.background-overlay--on {
+  background-color: rgba(255, 255, 255, 0);
+}
+
+.background-overlay--off {
+  background-color: transparent;
+}
+
+.background-overlay--blur {
+  -webkit-backdrop-filter: blur(1px);
+  backdrop-filter: blur(1px);
+}

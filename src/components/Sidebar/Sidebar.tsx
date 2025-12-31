@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { LogOut } from "lucide-react";
 import {
   HomeIcon,
@@ -50,6 +50,14 @@ const Sidebar = ({
   }));
 
   const [showComingSoon, setShowComingSoon] = useState<string | null>(null);
+  const sidebarRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    if (sidebarRef.current) {
+      sidebarRef.current.style.setProperty('--sidebar-top', `${topbarHeight}px`);
+      sidebarRef.current.style.setProperty('--sidebar-height', `calc(100vh - ${topbarHeight}px)`);
+    }
+  }, [topbarHeight]);
 
   const handleMenuClick = (item: {
     name: string;
@@ -68,11 +76,8 @@ const Sidebar = ({
 
   return (
     <aside
+      ref={sidebarRef}
       className="sidebar"
-      style={{
-        top: `${topbarHeight}px`,
-        height: `calc(100vh - ${topbarHeight}px)`,
-      }}
     >
       {/* --- CABECERA (IMAGEN PNG) --- */}
       <div className="sidebar-header">

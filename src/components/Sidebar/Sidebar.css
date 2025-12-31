@@ -2,6 +2,8 @@
 .sidebar {
   position: absolute;
   left: 0px;
+  top: var(--sidebar-top);
+  height: var(--sidebar-height);
   width: 230px;
   background-color: white;
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
