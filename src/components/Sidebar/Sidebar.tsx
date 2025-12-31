@@ -1,15 +1,15 @@
 import React, { useState } from "react";
+import { LogOut } from "lucide-react";
 import {
-  Home,
-  TrendingUp,
-  Users,
-  DollarSign,
-  Store,
-  Award,
-  Files,
-  Shapes,
-  LogOut,
-} from "lucide-react";
+  HomeIcon,
+  ImpactSocialIcon,
+  CommunityIcon,
+  SponsorsIcon,
+  MarketplaceIcon,
+  BalancesIcon,
+  ContentIcon,
+  ActionCategoriesIcon,
+} from "./icons";
 import BackgroundImages from "../BackgroundImages/BackgroundImages";
 import logo from "../../assets/logo.png";
 import "./Sidebar.css";
@@ -28,20 +28,20 @@ const Sidebar = ({
   onLogout,
 }: SidebarProps) => {
   const menuItems = [
-    { name: "Home", icon: <Home size={20} />, implemented: true },
+    { name: "Home", icon: <HomeIcon size={20} />, implemented: true },
     {
       name: "Impacto Social",
-      icon: <TrendingUp size={20} />,
+      icon: <ImpactSocialIcon size={20} />,
       implemented: true,
     },
-    { name: "Comunidad", icon: <Users size={20} />, implemented: true },
-    { name: "Sponsors", icon: <DollarSign size={20} />, implemented: true },
-    { name: "Marketplace", icon: <Store size={20} />, implemented: true },
-    { name: "Bakanes", icon: <Award size={20} />, implemented: true },
-    { name: "Contenidos", icon: <Files size={20} />, implemented: true },
+    { name: "Comunidad", icon: <CommunityIcon size={20} />, implemented: true },
+    { name: "Sponsors", icon: <SponsorsIcon size={20} />, implemented: true },
+    { name: "Marketplace", icon: <MarketplaceIcon size={20} />, implemented: true },
+    { name: "Bakanes", icon: <BalancesIcon size={20} />, implemented: true },
+    { name: "Contenidos", icon: <ContentIcon size={20} />, implemented: true },
     {
       name: "Categorias de acciones",
-      icon: <Shapes size={20} />,
+      icon: <ActionCategoriesIcon size={20} />,
       implemented: true,
     },
   ].map((item) => ({
