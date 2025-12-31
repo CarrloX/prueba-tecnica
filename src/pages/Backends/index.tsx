@@ -1,9 +1,10 @@
 import { useNavigate, useLocation, Routes, Route } from 'react-router-dom'
-import { useAuthContext } from '../../contexts/AuthContext'
+import { useAuthContext } from '../../hooks/useAuthContext'
 import TopBar from '../../components/TopBar/TopBar'
 import Sidebar from '../../components/Sidebar/Sidebar'
 import ComingSoon from '../ComingSoon'
 import Bakanes from '../Bakanes'
+import './index.css'
 
 export default function Backends() {
   const navigate = useNavigate()
@@ -29,16 +30,7 @@ export default function Backends() {
   }
 
   return (
-    <div style={{
-      position: 'fixed',
-      top: 0,
-      left: 0,
-      width: '100%',
-      height: '100%',
-      margin: 0,
-      padding: 0,
-      overflow: 'hidden'
-    }}>
+    <div className="container">
       <TopBar height={topbarHeight} />
 
       <Sidebar
@@ -49,14 +41,7 @@ export default function Backends() {
       />
 
       {/* Contenido principal */}
-      <div style={{
-        position: 'absolute',
-        top: `${topbarHeight}px`,
-        left: '300px',
-        width: 'calc(100% - 300px)',
-        height: `calc(100% - ${topbarHeight}px)`,
-        backgroundColor: 'white'
-      }}>
+      <div className="main-content">
         <Routes>
           <Route index element={<ComingSoon />} />
           <Route path="impacto-social" element={<ComingSoon />} />

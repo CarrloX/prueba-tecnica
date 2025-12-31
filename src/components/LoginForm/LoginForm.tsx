@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import './LoginForm.css'
 import { FiEye, FiEyeOff } from 'react-icons/fi'
-import { useAuthContext } from '../../contexts/AuthContext'
+import { useAuthContext } from '../../hooks/useAuthContext'
 import logo from '../../assets/logo.png'
 
 interface LoginFormProps {

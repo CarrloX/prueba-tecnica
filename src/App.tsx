@@ -4,7 +4,8 @@ import { BrowserRouter as Router, Routes, Route, useNavigate, Navigate } from 'r
 import LoginModal from './components/LoginModal/LoginModal'
 import BackgroundImages from './components/BackgroundImages/BackgroundImages'
 import Backends from './pages/Backends'
-import { AuthProvider, useAuthContext } from './contexts/AuthContext'
+import { AuthProvider } from './contexts/AuthContext'
+import { useAuthContext } from './hooks/useAuthContext'
 
 function AppContent() {
   const { isAuthenticated } = useAuthContext()

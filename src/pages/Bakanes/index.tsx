@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { MdSwapVert } from "react-icons/md";
 import CreateCategoryDrawer from "../../components/CreateCategoryDrawer/CreateCategoryDrawer";
 import { categoriesService, type Category } from "../../services/categoriesService";
-import { useAuthContext } from "../../contexts/AuthContext";
+import { useAuthContext } from "../../hooks/useAuthContext";
 import "./Bakanes.css";
 
 type Tab = "categorias" | "tipos" | "evidencias";
@@ -169,15 +169,13 @@ export default function Bakanes() {
   };
 
   // Función para renderizar el contenido de una celda según la columna
-  const renderCell = (category: Category, columnKey: string, width: number) => {
-    const cellStyle = { width: `${width}px`, minWidth: '80px' };
-
+  const renderCell = (category: Category, columnKey: string) => {
     switch (columnKey) {
       case 'nombre':
-        return <td key={columnKey} style={{ ...cellStyle, fontWeight: 500 }}>{category.nombre}</td>;
+        return <td key={columnKey} className="cell-name">{category.nombre}</td>;
       case 'icono':
         return (
-          <td key={columnKey} style={cellStyle}>
+          <td key={columnKey} className="cell-icon">
             <div className="icon-circle-gradient">
               <svg
                 width="14"
@@ -197,18 +195,18 @@ export default function Bakanes() {
       case 'estado': {
         const statusClass = category.estado === "Activo" ? "active" : "inactive";
         return (
-          <td key={columnKey} style={cellStyle}>
+          <td key={columnKey} className="cell-estado">
             <span className={`status-badge-${statusClass}`}>{category.estado}</span>
           </td>
         );
       }
       case 'descripcion':
-        return <td key={columnKey} style={{ ...cellStyle, maxWidth: "400px" }}>{category.descripcion}</td>;
+        return <td key={columnKey} className="cell-desc">{category.descripcion}</td>;
       case 'fecha':
-        return <td key={columnKey} style={cellStyle}>{category.fecha}</td>;
+        return <td key={columnKey} className="cell-fecha">{category.fecha}</td>;
       case 'acciones':
         return (
-          <td key={columnKey} style={cellStyle}>
+          <td key={columnKey} className="cell-acciones">
             <div className="action-buttons-container">
               <button
                 className="action-icon-button"
@@ -272,7 +270,7 @@ export default function Bakanes() {
           </td>
         );
       default:
-        return <td key={columnKey} style={cellStyle}></td>;
+        return <td key={columnKey}></td>;
     }
   };
 
@@ -372,53 +370,54 @@ export default function Bakanes() {
 
       {/* Toolbar */}
       <div className="bakanes-toolbar">
-        {/* Search */}
-        <div className="bakanes-search-container">
-          <div className="bakanes-search-input-wrapper">
+        <div className="bakanes-toolbar-group">
+          {/* Search */}
+          <div className="bakanes-search-container">
+            <div className="bakanes-search-input-wrapper">
+              <svg
+                width="12"
+                height="12"
+                viewBox="0 0 12 12"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                className="search-icon-svg"
+              >
+                <path
+                  d="M8.33333 7.33333H7.80667L7.62 7.15333C8.27333 6.39333 8.66667 5.40667 8.66667 4.33333C8.66667 1.94 6.72667 0 4.33333 0C1.94 0 0 1.94 0 4.33333C0 6.72667 1.94 8.66667 4.33333 8.66667C5.40667 8.66667 6.39333 8.27333 7.15333 7.62L7.33333 7.80667V8.33333L10.6667 11.66L11.66 10.6667L8.33333 7.33333ZM4.33333 7.33333C2.67333 7.33333 1.33333 5.99333 1.33333 4.33333C1.33333 2.67333 2.67333 1.33333 4.33333 1.33333C5.99333 1.33333 7.33333 2.67333 7.33333 4.33333C7.33333 5.99333 5.99333 7.33333 4.33333 7.33333Z"
+                  fill="#1840B2"
+                />
+              </svg>
+              <input
+                type="text"
+                placeholder="Buscar"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="bakanes-search-input"
+              />
+            </div>
+          </div>
+
+          {/* Filters */}
+          <button className="bakanes-filter-button">
             <svg
-              width="12"
-              height="12"
-              viewBox="0 0 12 12"
+              width="11"
+              height="11"
+              viewBox="0 0 11 11"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
-              className="search-icon-svg"
             >
               <path
-                d="M8.33333 7.33333H7.80667L7.62 7.15333C8.27333 6.39333 8.66667 5.40667 8.66667 4.33333C8.66667 1.94 6.72667 0 4.33333 0C1.94 0 0 1.94 0 4.33333C0 6.72667 1.94 8.66667 4.33333 8.66667C5.40667 8.66667 6.39333 8.27333 7.15333 7.62L7.33333 7.80667V8.33333L10.6667 11.66L11.66 10.6667L8.33333 7.33333ZM4.33333 7.33333C2.67333 7.33333 1.33333 5.99333 1.33333 4.33333C1.33333 2.67333 2.67333 1.33333 4.33333 1.33333C5.99333 1.33333 7.33333 2.67333 7.33333 4.33333C7.33333 5.99333 5.99333 7.33333 4.33333 7.33333Z"
-                fill="#1840B2"
+                d="M1.9743 1.33343L8.64096 1.33395L5.30063 5.53369L1.9743 1.33343ZM0.140984 1.07328C1.48751 2.80006 3.97393 6.00025 3.97393 6.00025L3.97361 10.0003C3.97358 10.3669 4.27356 10.6669 4.64023 10.667L5.97356 10.6671C6.34023 10.6671 6.64025 10.3671 6.64028 10.0005L6.6406 6.00046C6.6406 6.00046 9.12085 2.80066 10.4677 1.0741C10.8077 0.634126 10.4944 0.000767541 9.94107 0.000723854L0.667736 -8.31464e-06C0.114403 -5.20026e-05 -0.198981 0.633257 0.140984 1.07328Z"
+                fill="#28272A"
               />
             </svg>
-            <input
-              type="text"
-              placeholder="Buscar"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="bakanes-search-input"
-            />
-          </div>
+            <span className="text-sm font-medium">Filtros</span>
+          </button>
         </div>
-
-        {/* Filters */}
-        <button className="bakanes-filter-button">
-          <svg
-            width="11"
-            height="11"
-            viewBox="0 0 11 11"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M1.9743 1.33343L8.64096 1.33395L5.30063 5.53369L1.9743 1.33343ZM0.140984 1.07328C1.48751 2.80006 3.97393 6.00025 3.97393 6.00025L3.97361 10.0003C3.97358 10.3669 4.27356 10.6669 4.64023 10.667L5.97356 10.6671C6.34023 10.6671 6.64025 10.3671 6.64028 10.0005L6.6406 6.00046C6.6406 6.00046 9.12085 2.80066 10.4677 1.0741C10.8077 0.634126 10.4944 0.000767541 9.94107 0.000723854L0.667736 -8.31464e-06C0.114403 -5.20026e-05 -0.198981 0.633257 0.140984 1.07328Z"
-              fill="#28272A"
-            />
-          </svg>
-          <span className="text-sm font-medium">Filtros</span>
-        </button>
 
         {/* Create Button */}
         <button
           className="bakanes-create-button"
-          style={{ marginLeft: "auto" }}
           onClick={() => setIsDrawerOpen(true)}
         >
           Crear tipo de categoria
@@ -427,28 +426,17 @@ export default function Bakanes() {
 
       {/* Table */}
       <div className="bakanes-table-wrapper">
+        {/* Dinamic column width styles (generated from state) */}
+        <style>{Object.keys(columnWidths).map(k => `.bakanes-table th.col-${k} { width: ${columnWidths[k]}px; }`).join('\n')}</style>
         {error && (
-          <div className="error-message" style={{
-            color: 'red',
-            textAlign: 'center',
-            padding: '20px',
-            backgroundColor: '#fee',
-            border: '1px solid #fcc',
-            borderRadius: '4px',
-            marginBottom: '20px'
-          }}>
+          <div className="error-message">
             {error}
           </div>
         )}
 
         <div className="table-container">
           {loading ? (
-            <div style={{
-              textAlign: 'center',
-              padding: '40px',
-              fontSize: '16px',
-              color: '#666'
-            }}>
+            <div className="loading-placeholder">
               Cargando categorías...
             </div>
           ) : (
@@ -458,12 +446,7 @@ export default function Bakanes() {
                   {columnOrder.map((columnKey, index) => (
                     <th
                       key={columnKey}
-                      // Agregamos position: relative aquí para contener el resizer
-                      style={{
-                        width: `${columnWidths[columnKey] || 150}px`,
-                        minWidth: '80px',
-                        position: 'relative'
-                      }}
+                      className={`col-${columnKey}`}
                     >
                       <div className="th-container">
                         <span>{columnDefinitions[columnKey].label}</span>
@@ -512,12 +495,7 @@ export default function Bakanes() {
                   <tr>
                     <td
                       colSpan={columnOrder.length}
-                      style={{
-                        textAlign: 'center',
-                        padding: '40px',
-                        color: '#666',
-                        fontStyle: 'italic'
-                      }}
+                      className="empty-state"
                     >
                       No hay categorías disponibles
                     </td>
@@ -525,7 +503,7 @@ export default function Bakanes() {
                 ) : (
                   categories.map((category) => (
                     <tr key={category.id}>
-                      {columnOrder.map((columnKey) => renderCell(category, columnKey, columnWidths[columnKey] || 150))}
+                      {columnOrder.map((columnKey) => renderCell(category, columnKey))}
                     </tr>
                   ))
                 )}
@@ -537,8 +515,10 @@ export default function Bakanes() {
         {/* Pagination */}
         <div className="pagination-container">
           <div className="results-per-page-group">
-            <span className="text-gray-600 text-sm">Resultados por página</span>
+            <label htmlFor="results-per-page-select" className="results-per-page-label">Resultados por página</label>
             <select
+              id="results-per-page-select"
+              aria-label="Resultados por página"
               value={itemsPerPage}
               onChange={(e) => setItemsPerPage(Number(e.target.value))}
               className="results-per-page-select"

@@ -1,6 +1,7 @@
 import { useMemo } from "react";
-import { useAuthContext } from "../../contexts/AuthContext";
+import { useAuthContext } from "../../hooks/useAuthContext";
 import logo from "../../assets/logo white.png";
+import "./TopBar.css";
 
 interface TopBarProps {
   height?: number;
@@ -48,56 +49,25 @@ export default function TopBar({
   // Obtener primera letra del email
   const firstLetter = user?.email?.charAt(0)?.toUpperCase() || "?";
 
+  const dynamicClass = useMemo(() => {
+    const sanitize = (s: string) => s.replace(/[^a-z0-9_-]/gi, "");
+    return `topbar-${sanitize(String(height))}-${sanitize(String(backgroundColor))}-${sanitize(String(avatarColor))}`;
+  }, [height, backgroundColor, avatarColor]);
+
   return (
-    <div
-      style={{
-        position: "absolute",
-        top: 0,
-        left: 0,
-        width: "100%",
-        height: `${height}px`,
-        backgroundColor,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
-        padding: "0 10px",
-        boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
-        zIndex: 10,
-      }}
-    >
+    <>
+      <style>{`.${dynamicClass} { height: ${height}px; background-color: ${backgroundColor}; } .${dynamicClass} .topbar__avatar { background-color: ${avatarColor}; }`}</style>
+      <div className={`topbar ${dynamicClass}`}>
       {/* Logo del lado izquierdo */}
-      <img
-        src={logo}
-        alt="Logo"
-        style={{
-          height: "40px",
-          width: "auto",
-          marginLeft: "40px",
-        }}
-      />
+      <img src={logo} alt="Logo" className="topbar__logo" />
 
       {/* Avatar del lado derecho */}
       {user && (
-        <div
-          style={{
-            width: "34px",
-            height: "34px",
-            borderRadius: "50%",
-            backgroundColor: avatarColor,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            color: "white",
-            fontWeight: "bold",
-            fontSize: "18px",
-            cursor: "pointer",
-            marginRight: "50px",
-            flexShrink: 0,
-          }}
-        >
+        <div className="topbar__avatar">
           {firstLetter}
         </div>
       )}
     </div>
+    </>
   );
 }

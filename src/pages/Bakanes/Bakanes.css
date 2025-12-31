@@ -172,6 +172,7 @@
 .bakanes-table {
   width: 100%;
   border-collapse: collapse;
+  table-layout: fixed; /* Use fixed layout so th widths control column sizes */
 }
 
 .bakanes-table th {
@@ -346,6 +347,9 @@
   width: 5px; /* Un área pequeña para agarrar */
   background: transparent;
   cursor: col-resize;
+  -webkit-user-select: none; /* Safari 3.1+ */
+  -moz-user-select: none;    /* Old Firefox */
+  -ms-user-select: none;     /* IE10+ */
   user-select: none;
   touch-action: none;
   z-index: 10;
@@ -367,8 +371,10 @@
   cursor: col-resize;
   background-color: #d1d5db;
   z-index: 10;
-  user-select: none;
   -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
   opacity: 0;
   transition: opacity 0.2s, background-color 0.2s;
 }
@@ -395,6 +401,44 @@
   align-items: center;
   gap: 1.5rem; /* Space between "Resultados por página" and the select */
 }
+
+/* Accessibility & utility classes */
+.results-per-page-label {
+  color: #6b7280; /* text-gray-600 */
+  font-size: 0.875rem; /* text-sm */
+}
+
+.error-message {
+  color: red;
+  text-align: center;
+  padding: 20px;
+  background-color: #fee;
+  border: 1px solid #fcc;
+  border-radius: 4px;
+  margin-bottom: 20px;
+}
+
+.loading-placeholder {
+  text-align: center;
+  padding: 40px;
+  font-size: 16px;
+  color: #666;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 40px;
+  color: #666;
+  font-style: italic;
+}
+
+.cell-name { font-weight: 500; }
+.cell-desc { max-width: 400px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.resizable-cell { min-width: 80px; }
+
+/* Ensure table cells have a sensible min width to avoid collapse */
+.bakanes-table td { min-width: 80px; }
+
 
 .pagination-nav {
   display: flex;
