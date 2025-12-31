@@ -20,7 +20,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
 
   const login = async (email: string, password: string) => {
-    const response = await fetch('http://localhost:8080/api/v1/user/login', {
+    const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/v1/user/login`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -36,7 +36,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   const register = async (email: string, password: string) => {
-    const response = await fetch('http://localhost:8080/api/v1/user/register', {
+    const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/v1/user/register`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
