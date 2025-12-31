@@ -7,7 +7,8 @@ interface User {
 
 interface AuthContextType {
   user: User | null
-  login: (email: string) => Promise<void>
+  login: (email: string, password: string) => Promise<void>
+  register: (email: string, password: string) => Promise<void>
   logout: () => void
   isAuthenticated: boolean
 }
@@ -17,14 +18,36 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined)
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
 
-  const login = async (email: string) => {
-    // Mock: acepta cualquier email
-    return new Promise<void>((resolve) => {
-      setTimeout(() => {
-        setUser({ email })
-        resolve()
-      }, 900)
+  const login = async (email: string, password: string) => {
+    const response = await fetch('http://localhost:8080/api/v1/user/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ email, password }),
     })
+    if (!response.ok) {
+      throw new Error('Error en el login')
+    }
+    // Asumimos que devuelve UserBasicResponse con email
+    const userData = await response.json()
+    setUser({ email: userData.email })
+  }
+
+  const register = async (email: string, password: string) => {
+    const response = await fetch('http://localhost:8080/api/v1/user/register', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ email, password }),
+    })
+    if (!response.ok) {
+      throw new Error('Error en el registro')
+    }
+    // Asumimos que UserBasicResponse tiene email
+    const userData = await response.json()
+    setUser({ email: userData.email })
   }
 
   const logout = () => {
@@ -34,7 +57,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const isAuthenticated = user !== null
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, isAuthenticated }}>
+    <AuthContext.Provider value={{ user, login, register, logout, isAuthenticated }}>
       {children}
     </AuthContext.Provider>
   )
