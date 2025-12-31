@@ -4,7 +4,7 @@ Aplicación web para gestión de categorías con autenticación de usuarios, des
 
 ## 🌐 URLs de Producción
 
-- **Frontend:** https://prueba-tecnica-drab.vercel.app/login
+- **Frontend:** [https://prueba-tecnica-drab.vercel.app/login](https://prueba-tecnica-8vhnzhgt2-carloxs-projects-1b55f0fd.vercel.app/)
 - **API Documentation (Swagger):** https://tekniko-latest.onrender.com/api/v1/swagger-ui/index.html#/
 
 > ⚠️ **Nota importante:** La API en Render puede tardar aproximadamente 5 minutos en activarse después de periodos de inactividad.
