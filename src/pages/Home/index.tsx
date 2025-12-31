@@ -1,7 +1,9 @@
+import './index.css';
+
 export default function Home() {
   return (
-    <div style={{ padding: '20px' }}>
-      <h1 style={{ margin: 0, fontSize: '24px', fontWeight: 'bold', color: '#1e1b4b' }}>
+    <div className="home-container">
+      <h1 className="home-title">
         Inicio
       </h1>
       {/* Contenido principal */}
