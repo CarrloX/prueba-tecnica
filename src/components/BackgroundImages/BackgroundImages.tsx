@@ -49,6 +49,7 @@ interface BackgroundImagesProps {
   applyOverlay?: boolean;
   backgroundColor?: string;
   colorPalette?: string[];
+  enableMorphing?: boolean;
 }
 
 const BackgroundImages: React.FC<BackgroundImagesProps> = ({
@@ -56,6 +57,7 @@ const BackgroundImages: React.FC<BackgroundImagesProps> = ({
   applyOverlay = true,
   backgroundColor = "#f0f0f0ff",
   colorPalette = PALETTE,
+  enableMorphing = true,
 }) => {
   const [shapes, setShapes] = useState<Shape[]>([]);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -182,6 +184,8 @@ const BackgroundImages: React.FC<BackgroundImagesProps> = ({
 
   // Sistema de transformación automática cada 2 segundos
   useEffect(() => {
+    if (!enableMorphing) return;
+
     const startMorphing = () => {
       morphIntervalRef.current = window.setInterval(() => {
         setShapes(prevShapes => {
@@ -249,7 +253,7 @@ const BackgroundImages: React.FC<BackgroundImagesProps> = ({
         clearInterval(morphIntervalRef.current);
       }
     };
-  }, []);
+  }, [enableMorphing]);
 
   // Animación de morphing usando requestAnimationFrame
   useEffect(() => {

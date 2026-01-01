@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useMemo } from "react";
 import { LogOut } from "lucide-react";
 import {
   HomeIcon,
@@ -30,30 +30,40 @@ const Sidebar = ({
   onLogout,
   isOpen = false,
 }: SidebarProps) => {
+  const [showComingSoon, setShowComingSoon] = useState<string | null>(null);
+  const [animatingIcon, setAnimatingIcon] = useState<string | null>(null);
+  const sidebarRef = useRef<HTMLElement>(null);
+
+  const colorPalette = useMemo(() => [
+    "#FF9AA2",
+    "#FFB7B2",
+    "#FFDAC1",
+    "#E2F0CB",
+    "#B5EAD7",
+    "#C7CEEA",
+  ], []);
+
   const menuItems = [
-    { name: "Home", icon: <HomeIcon size={20} />, implemented: true },
+    { name: "Home", icon: <HomeIcon size={20} isAnimating={animatingIcon === "Home"} />, implemented: true },
     {
       name: "Impacto Social",
-      icon: <ImpactSocialIcon size={20} />,
+      icon: <ImpactSocialIcon size={20} isAnimating={animatingIcon === "Impacto Social"} />,
       implemented: true,
     },
-    { name: "Comunidad", icon: <CommunityIcon size={20} />, implemented: true },
-    { name: "Sponsors", icon: <SponsorsIcon size={20} />, implemented: true },
-    { name: "Marketplace", icon: <MarketplaceIcon size={20} />, implemented: true },
-    { name: "Bakanes", icon: <BalancesIcon size={20} />, implemented: true },
-    { name: "Contenidos", icon: <ContentIcon size={20} />, implemented: true },
+    { name: "Comunidad", icon: <CommunityIcon size={20} isAnimating={animatingIcon === "Comunidad"} />, implemented: true },
+    { name: "Sponsors", icon: <SponsorsIcon size={20} isAnimating={animatingIcon === "Sponsors"} />, implemented: true },
+    { name: "Marketplace", icon: <MarketplaceIcon size={20} isAnimating={animatingIcon === "Marketplace"} />, implemented: true },
+    { name: "Bakanes", icon: <BalancesIcon size={20} isAnimating={animatingIcon === "Bakanes"} />, implemented: true },
+    { name: "Contenidos", icon: <ContentIcon size={20} isAnimating={animatingIcon === "Contenidos"} />, implemented: true },
     {
       name: "Categorias de acciones",
-      icon: <ActionCategoriesIcon size={20} />,
+      icon: <ActionCategoriesIcon size={20} isAnimating={animatingIcon === "Categorias de acciones"} />,
       implemented: true,
     },
   ].map((item) => ({
     ...item,
     active: item.name.toLowerCase().replace(/\s+/g, "-") === currentPage,
   }));
-
-  const [showComingSoon, setShowComingSoon] = useState<string | null>(null);
-  const sidebarRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     if (sidebarRef.current) {
@@ -69,6 +79,11 @@ const Sidebar = ({
   }) => {
     if (item.implemented) {
       setShowComingSoon(null);
+      // Activar animación del ícono
+      setAnimatingIcon(item.name);
+      // Desactivar animación después de 2 segundos
+      setTimeout(() => setAnimatingIcon(null), 2000);
+
       onNavigate?.(item.name.toLowerCase().replace(/\s+/g, "-"));
     } else {
       setShowComingSoon(item.name);
@@ -88,14 +103,8 @@ const Sidebar = ({
           applyBlur={false}
           applyOverlay={false}
           backgroundColor="transparent"
-          colorPalette={[
-            "#FF9AA2",
-            "#FFB7B2",
-            "#FFDAC1",
-            "#E2F0CB",
-            "#B5EAD7",
-            "#C7CEEA",
-          ]}
+          colorPalette={colorPalette}
+          enableMorphing={false}
         />
         <img src={logo} alt="Logo" className="sidebar-logo" />
       </div>

@@ -1,0 +1,261 @@
+/* Icon Animations CSS */
+
+/* Base styles for animated icons */
+.icon-svg {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.icon-path {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Hover animations for navigation icons */
+.icon-svg:hover {
+  transform: scale(1.15) rotate(5deg);
+}
+
+.icon-svg:hover .icon-path {
+  filter: drop-shadow(0 4px 8px rgba(0, 188, 198, 0.3));
+}
+
+/* Specific animations for different icon types */
+
+/* Home Icon - Breathing effect */
+.home-icon-svg {
+  animation: breathe 3s ease-in-out infinite;
+}
+
+.home-icon-svg:hover {
+  animation: breathe 0.6s ease-in-out infinite;
+}
+
+/* Impact Social Icon - Pulse effect */
+.impact-social-icon-svg {
+  animation: gentlePulse 4s ease-in-out infinite;
+}
+
+.impact-social-icon-svg:hover {
+  animation: strongPulse 0.8s ease-in-out infinite;
+}
+
+/* Community Icon - Gentle rotation */
+.community-icon-svg:hover {
+  animation: gentleRotate 0.6s ease-in-out;
+}
+
+/* Sponsors Icon - Bounce effect */
+.sponsors-icon-svg:hover {
+  animation: bounce 0.6s ease-in-out;
+}
+
+/* Marketplace Icon - Shake effect */
+.marketplace-icon-svg:hover {
+  animation: shake 0.5s ease-in-out;
+}
+
+/* Balances Icon - Scale bounce */
+.balances-icon-svg:hover {
+  animation: scaleBounce 0.4s ease-in-out;
+}
+
+/* Content Icon - Flip effect */
+.content-icon-svg:hover {
+  animation: flip 0.6s ease-in-out;
+}
+
+/* Action Categories Icon - Spin effect */
+.action-categories-icon-svg:hover {
+  animation: spin 0.5s ease-in-out;
+}
+
+/* Keyframe animations */
+@keyframes breathe {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.9;
+  }
+}
+
+@keyframes gentlePulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.03);
+    opacity: 0.95;
+  }
+}
+
+@keyframes strongPulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 0.8;
+  }
+}
+
+@keyframes gentleRotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(10deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}
+
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0) scale(1);
+  }
+  40% {
+    transform: translateY(-8px) scale(1.1);
+  }
+  60% {
+    transform: translateY(-4px) scale(1.05);
+  }
+}
+
+@keyframes shake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  10%, 30%, 50%, 70%, 90% {
+    transform: translateX(-2px);
+  }
+  20%, 40%, 60%, 80% {
+    transform: translateX(2px);
+  }
+}
+
+@keyframes scaleBounce {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.3);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes flip {
+  0% {
+    transform: rotateY(0deg);
+  }
+  50% {
+    transform: rotateY(180deg);
+  }
+  100% {
+    transform: rotateY(0deg);
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes clickCelebration {
+  0% {
+    transform: scale(1) rotate(0deg);
+  }
+  25% {
+    transform: scale(1.2) rotate(-5deg);
+  }
+  50% {
+    transform: scale(1.4) rotate(5deg);
+  }
+  75% {
+    transform: scale(1.2) rotate(-3deg);
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+  }
+}
+
+@keyframes clickPathPulse {
+  0% {
+    fill: #28272A;
+    filter: drop-shadow(0 0 0 rgba(0, 188, 198, 0));
+  }
+  25% {
+    fill: #00bcc6;
+    filter: drop-shadow(0 0 8px rgba(0, 188, 198, 0.6));
+  }
+  50% {
+    fill: #00a8b3;
+    filter: drop-shadow(0 0 16px rgba(0, 188, 198, 0.8));
+  }
+  75% {
+    fill: #00bcc6;
+    filter: drop-shadow(0 0 8px rgba(0, 188, 198, 0.6));
+  }
+  100% {
+    fill: #28272A;
+    filter: drop-shadow(0 0 0 rgba(0, 188, 198, 0));
+  }
+}
+
+/* Click animations - triggered when menu item is clicked */
+.icon-click-animating {
+  animation: clickCelebration 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.icon-click-animating .icon-path {
+  animation: clickPathPulse 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+/* Active state animations */
+.icon-svg.active {
+  transform: scale(1.1);
+}
+
+.icon-svg.active .icon-path {
+  filter: drop-shadow(0 2px 4px rgba(0, 188, 198, 0.4));
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .icon-svg,
+  .icon-path {
+    transition: none;
+    animation: none;
+  }
+
+  .icon-svg:hover {
+    transform: none;
+  }
+
+  .icon-svg:hover .icon-path {
+    filter: none;
+  }
+}
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+  .icon-svg:hover {
+    transform: scale(1.08) rotate(3deg);
+  }
+
+  /* Reduce animation intensity on mobile */
+  .home-icon-svg,
+  .impact-social-icon-svg {
+    animation-duration: 6s;
+  }
+}
