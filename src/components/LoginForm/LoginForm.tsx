@@ -6,9 +6,10 @@ import logo from '../../assets/logo.png'
 
 interface LoginFormProps {
   onLogin: () => void
+  onModeChange?: (mode: 'login' | 'register') => void
 }
 
-export default function LoginForm({ onLogin }: LoginFormProps) {
+export default function LoginForm({ onLogin, onModeChange }: LoginFormProps) {
   const { login, register } = useAuthContext()
   const [mode, setMode] = useState<'login' | 'register'>('login')
   const [email, setEmail] = useState('')
@@ -21,6 +22,11 @@ export default function LoginForm({ onLogin }: LoginFormProps) {
   const isValid = mode === 'login'
     ? email.length > 0 && password.length > 0
     : email.length > 0 && password.length > 0 && password === confirmPassword
+
+  function handleModeChange(newMode: 'login' | 'register') {
+    setMode(newMode)
+    onModeChange?.(newMode)
+  }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -99,15 +105,15 @@ export default function LoginForm({ onLogin }: LoginFormProps) {
 
       <div className="bk-helper">
         {mode === 'login' ? (
-          <a href="#" onClick={(e) => { e.preventDefault(); setMode('register'); }}>¿No tienes cuenta? Regístrate</a>
+          <a href="#" onClick={(e) => { e.preventDefault(); handleModeChange('register'); }}>¿No tienes cuenta? Regístrate</a>
         ) : (
-          <a href="#" onClick={(e) => { e.preventDefault(); setMode('login'); }}>¿Ya tienes cuenta? Inicia sesión</a>
+          <a href="#" onClick={(e) => { e.preventDefault(); handleModeChange('login'); }}>¿Ya tienes cuenta? Inicia sesión</a>
         )}
       </div>
 
       {error && <div className="bk-error">{error}</div>}
 
-      <button className="bk-submit" type="submit" disabled={!isValid || loading}>
+      <button className={`bk-submit ${loading ? 'loading' : ''}`} type="submit" disabled={!isValid || loading}>
         {loading ? (mode === 'login' ? 'Ingresando...' : 'Registrando...') : (mode === 'login' ? 'Ingresar' : 'Registrar')}
       </button>
     </form>

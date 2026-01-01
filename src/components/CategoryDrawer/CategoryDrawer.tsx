@@ -31,6 +31,7 @@ const CategoryDrawer: React.FC<CategoryDrawerProps> = ({
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (mode === "edit" && category) {
+      // eslint-disable-next-line
       setFormData(prev => {
         const newData = {
           nombre: category.nombre,

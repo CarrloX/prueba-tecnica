@@ -29,7 +29,6 @@ const Sidebar = ({
   onNavigate,
   onLogout,
   isOpen = false,
-  onClose,
 }: SidebarProps) => {
   const menuItems = [
     { name: "Home", icon: <HomeIcon size={20} />, implemented: true },

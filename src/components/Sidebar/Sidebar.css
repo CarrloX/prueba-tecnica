@@ -14,6 +14,7 @@
   z-index: 10;
   transform: translateX(0);
   transition: transform 0.3s ease;
+  animation: slideInFromLeft 0.5s ease-out;
 }
 
 /* Mobile: Sidebar oculto por defecto */
@@ -33,6 +34,9 @@
   height: 151px;
   margin-bottom: 24px;
   position: relative;
+  animation: fadeInScale 0.6s ease-out 0.1s both;
+  opacity: 0;
+  transform: scale(0.9);
 }
 
 .sidebar-header img {
@@ -50,6 +54,7 @@
   max-width: 80%;
   height: auto !important;
   z-index: 5;
+  animation: logoFloat 2s ease-in-out infinite 0.5s;
 }
 
 .sidebar-nav {
@@ -59,7 +64,17 @@
 
 .menu-item {
   position: relative;
+  animation: fadeInUp 0.5s ease-out both;
 }
+
+.menu-item:nth-child(1) { animation-delay: 0.2s; }
+.menu-item:nth-child(2) { animation-delay: 0.3s; }
+.menu-item:nth-child(3) { animation-delay: 0.4s; }
+.menu-item:nth-child(4) { animation-delay: 0.5s; }
+.menu-item:nth-child(5) { animation-delay: 0.6s; }
+.menu-item:nth-child(6) { animation-delay: 0.7s; }
+.menu-item:nth-child(7) { animation-delay: 0.8s; }
+.menu-item:nth-child(8) { animation-delay: 0.9s; }
 
 .menu-item-button {
   width: 100%;
@@ -71,15 +86,34 @@
   font-size: 16px;
   font-weight: 500;
   color: #374151;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
   display: flex;
   align-items: center;
   gap: 16px;
   border-left: 5px solid transparent;
+  position: relative;
+  overflow: hidden;
+}
+
+.menu-item-button::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 0;
+  background: linear-gradient(90deg, rgba(0, 188, 198, 0.1), rgba(0, 188, 198, 0.05));
+  transition: width 0.3s ease;
+}
+
+.menu-item-button:hover::before {
+  width: 100%;
 }
 
 .menu-item-button:hover {
   background-color: #e0f8fa;
+  transform: translateX(5px);
+  box-shadow: 0 2px 8px rgba(0, 188, 198, 0.15);
 }
 
 .menu-item-button.active {
@@ -87,10 +121,12 @@
   border-left-color: #00bcc6;
   color: #1e1b4b;
   font-weight: 600;
+  box-shadow: 0 2px 8px rgba(0, 188, 198, 0.2);
 }
 
 .menu-item-button.active .menu-icon {
   color: #1e1b4b;
+  transform: scale(1.1);
 }
 
 .menu-icon {
@@ -98,13 +134,19 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.menu-item-button:hover .menu-icon {
+  transform: scale(1.1);
+  color: #00bcc6;
 }
 
 .coming-soon-tooltip {
   position: absolute;
   right: -120px;
   top: 50%;
-  transform: translateY(-50%);
+  transform: translateY(-50%) scale(0.8);
   background-color: #6b46c1;
   color: white;
   padding: 8px 12px;
@@ -114,6 +156,8 @@
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
   white-space: nowrap;
   z-index: 20;
+  animation: tooltipBounceIn 0.3s ease-out;
+  opacity: 0;
 }
 
 .coming-soon-tooltip::before {
@@ -132,6 +176,9 @@
 .sidebar-footer {
   margin-top: auto;
   padding: 16px 32px 40px;
+  animation: fadeInUp 0.5s ease-out 1.0s both;
+  opacity: 0;
+  transform: translateY(20px);
 }
 
 .logout-button {
@@ -146,15 +193,95 @@
   cursor: pointer;
   width: 100%;
   padding: 0;
-  transition: color 0.2s ease;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.logout-button::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 0;
+  background: linear-gradient(90deg, rgba(124, 58, 237, 0.1), rgba(124, 58, 237, 0.05));
+  transition: width 0.3s ease;
+}
+
+.logout-button:hover::before {
+  width: 100%;
 }
 
 .logout-button:hover {
   color: #7c3aed;
+  transform: translateX(5px);
 }
 
 .logout-icon {
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: transform 0.3s ease;
+}
+
+.logout-button:hover .logout-icon {
+  transform: scale(1.1);
+}
+
+@keyframes slideInFromLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes logoFloat {
+  0%, 100% {
+    transform: translate(-50%, -50%) scale(1);
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.05);
+  }
+}
+
+@keyframes tooltipBounceIn {
+  0% {
+    opacity: 0;
+    transform: translateY(-50%) scale(0.8) translateX(10px);
+  }
+  60% {
+    opacity: 1;
+    transform: translateY(-50%) scale(1.1) translateX(-5px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(-50%) scale(1) translateX(0);
+  }
 }
