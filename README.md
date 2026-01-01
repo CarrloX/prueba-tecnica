@@ -2,6 +2,11 @@
 
 Aplicación web para gestión de categorías con autenticación de usuarios, desarrollada con React, TypeScript y Vite.
 
+## 📚 Repositorios del Proyecto
+
+- **Frontend (Este repositorio):** [https://github.com/CarrloX/prueba-tecnica](https://github.com/CarrloX/prueba-tecnica)
+- **Backend:** [https://github.com/CarrloX/backend-prueba-tecnica](https://github.com/CarrloX/backend-prueba-tecnica)
+
 ## 🌐 URLs de Producción
 
 - **Frontend:** [https://prueba-tecnica-drab.vercel.app/login](https://prueba-tecnica-8vhnzhgt2-carloxs-projects-1b55f0fd.vercel.app/)

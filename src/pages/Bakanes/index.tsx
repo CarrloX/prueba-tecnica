@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { MdSwapVert } from "react-icons/md";
-import CreateCategoryDrawer from "../../components/CreateCategoryDrawer/CreateCategoryDrawer";
+import CategoryDrawer from "../../components/CategoryDrawer/CategoryDrawer";
+import ConfirmModal from "../../components/ConfirmModal/ConfirmModal";
 import { categoriesService, type Category } from "../../services/categoriesService";
 import { useAuthContext } from "../../hooks/useAuthContext";
 import "./Bakanes.css";
@@ -12,6 +13,10 @@ export default function Bakanes() {
 
   const [activeTab, setActiveTab] = useState<Tab>("categorias");
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [isEditDrawerOpen, setIsEditDrawerOpen] = useState(false);
+  const [editingCategory, setEditingCategory] = useState<Category | null>(null);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [deletingCategory, setDeletingCategory] = useState<Category | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
@@ -67,29 +72,50 @@ export default function Bakanes() {
     }
   };
 
-  // Function to delete a category
-  const deleteCategory = async (id: number) => {
+  // Function to show delete confirmation modal
+  const deleteCategory = (category: Category) => {
+    setDeletingCategory(category);
+    setIsDeleteModalOpen(true);
+  };
+
+  // Function to confirm and delete a category
+  const confirmDeleteCategory = async () => {
+    if (!user || !deletingCategory) {
+      setError('Usuario no autenticado o categoría no encontrada');
+      return;
+    }
+
+    try {
+      await categoriesService.deleteCategory(deletingCategory.id, user.id);
+      setCategories(prev => prev.filter(cat => cat.id !== deletingCategory.id));
+      setError(null); // Clear any previous errors
+    } catch (err) {
+      console.error('Error deleting category:', err);
+      setError('Error al eliminar la categoría');
+    }
+  };
+
+  // Function to handle edit
+  const editCategory = (category: Category) => {
+    setEditingCategory(category);
+    setIsEditDrawerOpen(true);
+  };
+
+  // Function to update a category using API
+  const updateCategory = async (id: number, updatedCategory: { nombre: string; descripcion: string; estado: "Activo" | "Inactivo" }) => {
     if (!user) {
       setError('Usuario no autenticado');
       return;
     }
 
-    if (window.confirm('¿Estás seguro de que quieres eliminar esta categoría?')) {
-      try {
-        await categoriesService.deleteCategory(id, user.id);
-        setCategories(prev => prev.filter(cat => cat.id !== id));
-        setError(null); // Clear any previous errors
-      } catch (err) {
-        console.error('Error deleting category:', err);
-        setError('Error al eliminar la categoría');
-      }
+    try {
+      const result = await categoriesService.updateCategory(id, updatedCategory, user.id);
+      setCategories(prev => prev.map(cat => cat.id === id ? result : cat));
+      setError(null); // Clear any previous errors
+    } catch (err) {
+      console.error('Error updating category:', err);
+      setError('Error al actualizar la categoría');
     }
-  };
-
-  // Function to handle edit (placeholder for now)
-  const editCategory = (category: Category) => {
-    // TODO: Implement edit functionality
-    alert(`Editar categoría: ${category.nombre}\n\nFuncionalidad en desarrollo...`);
   };
 
   const totalItems = 40;
@@ -229,7 +255,7 @@ export default function Bakanes() {
               <button
                 className="action-icon-button"
                 title="Eliminar"
-                onClick={() => deleteCategory(category.id)}
+                onClick={() => deleteCategory(category)}
               >
                 <svg
                   width="20"
@@ -610,10 +636,32 @@ export default function Bakanes() {
         </div>
       </div>
 
-      <CreateCategoryDrawer
+      <CategoryDrawer
+        mode="create"
         isOpen={isDrawerOpen}
         onClose={() => setIsDrawerOpen(false)}
         onCreate={addCategory}
+      />
+
+      <CategoryDrawer
+        mode="edit"
+        isOpen={isEditDrawerOpen}
+        onClose={() => {
+          setIsEditDrawerOpen(false);
+          setEditingCategory(null);
+        }}
+        category={editingCategory}
+        onUpdate={updateCategory}
+      />
+
+      <ConfirmModal
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        onConfirm={confirmDeleteCategory}
+        title="Eliminar categoría"
+        message={`¿Estás seguro de que quieres eliminar la categoría "${deletingCategory?.nombre}"? Esta acción no se puede deshacer.`}
+        confirmText="Eliminar"
+        cancelText="Cancelar"
       />
     </div>
   );

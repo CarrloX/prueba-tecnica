@@ -1,16 +1,24 @@
-import React, { useState } from "react";
-import "./CreateCategoryDrawer.css";
+import React, { useState, useEffect } from "react";
+import "./CategoryDrawer.css";
 
-interface CreateCategoryDrawerProps {
+type CategoryDrawerMode = "create" | "edit";
+
+interface CategoryDrawerProps {
+  mode: CategoryDrawerMode;
   isOpen: boolean;
   onClose: () => void;
-  onCreate: (category: { nombre: string; descripcion: string; estado: "Activo" | "Inactivo" }) => void;
+  onCreate?: (category: { nombre: string; descripcion: string; estado: "Activo" | "Inactivo" }) => void;
+  category?: { id: number; nombre: string; descripcion: string; estado: "Activo" | "Inactivo" } | null;
+  onUpdate?: (id: number, category: { nombre: string; descripcion: string; estado: "Activo" | "Inactivo" }) => void;
 }
 
-const CreateCategoryDrawer: React.FC<CreateCategoryDrawerProps> = ({
+const CategoryDrawer: React.FC<CategoryDrawerProps> = ({
+  mode,
   isOpen,
   onClose,
   onCreate,
+  category,
+  onUpdate,
 }) => {
   const [formData, setFormData] = useState({
     nombre: "",
@@ -18,6 +26,43 @@ const CreateCategoryDrawer: React.FC<CreateCategoryDrawerProps> = ({
     color: "",
     activo: true,
   });
+
+  // Initialize form data when category changes (only in edit mode)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => {
+    if (mode === "edit" && category) {
+      setFormData(prev => {
+        const newData = {
+          nombre: category.nombre,
+          descripcion: category.descripcion,
+          color: "", // Not used in backend
+          activo: category.estado === "Activo",
+        };
+        // Only update if data has actually changed
+        if (
+          prev.nombre !== newData.nombre ||
+          prev.descripcion !== newData.descripcion ||
+          prev.activo !== newData.activo
+        ) {
+          return newData;
+        }
+        return prev;
+      });
+    } else if (mode === "create") {
+      // Reset form for create mode
+      setFormData(prev => {
+        if (prev.nombre !== "" || prev.descripcion !== "" || !prev.activo) {
+          return {
+            nombre: "",
+            descripcion: "",
+            color: "",
+            activo: true,
+          };
+        }
+        return prev;
+      });
+    }
+  }, [category, mode]);
 
   // Check if form is valid (required fields filled)
   const isFormValid = formData.nombre.trim() && formData.descripcion.trim();
@@ -38,9 +83,7 @@ const CreateCategoryDrawer: React.FC<CreateCategoryDrawerProps> = ({
     e.stopPropagation();
   };
 
-
-
-  const handleCreate = () => {
+  const handleSubmit = () => {
     // Validate required fields
     if (!formData.nombre.trim() || !formData.descripcion.trim()) {
       alert("Por favor complete todos los campos requeridos.");
@@ -48,26 +91,31 @@ const CreateCategoryDrawer: React.FC<CreateCategoryDrawerProps> = ({
     }
 
     // Create category object
-    const newCategory = {
+    const categoryData = {
       nombre: formData.nombre.trim(),
       descripcion: formData.descripcion.trim(),
       estado: formData.activo ? "Activo" as const : "Inactivo" as const,
     };
 
-    // Call onCreate callback
-    onCreate(newCategory);
-
-    // Reset form
-    setFormData({
-      nombre: "",
-      descripcion: "",
-      color: "",
-      activo: true,
-    });
+    if (mode === "create" && onCreate) {
+      onCreate(categoryData);
+      // Reset form
+      setFormData({
+        nombre: "",
+        descripcion: "",
+        color: "",
+        activo: true,
+      });
+    } else if (mode === "edit" && category && onUpdate) {
+      onUpdate(category.id, categoryData);
+    }
 
     // Close drawer
     onClose();
   };
+
+  const title = mode === "create" ? "Crear categoria" : "Editar categoria";
+  const buttonText = mode === "create" ? "Crear" : "Actualizar";
 
   return (
     <div className={`drawer-overlay ${isOpen ? "open" : ""}`} onClick={onClose}>
@@ -80,7 +128,7 @@ const CreateCategoryDrawer: React.FC<CreateCategoryDrawerProps> = ({
       >
         <div className="drawer-header">
           <h2 id="drawer-title" className="drawer-title">
-            Crear categoria
+            {title}
           </h2>
           <button className="close-button" onClick={onClose} aria-label="Cerrar">
             <svg
@@ -205,11 +253,13 @@ const CreateCategoryDrawer: React.FC<CreateCategoryDrawerProps> = ({
           <button className="btn btn-cancel" onClick={onClose}>
             Cancelar
           </button>
-          <button className={`btn btn-create ${isFormValid ? 'active' : ''}`} onClick={handleCreate}>Crear</button>
+          <button className={`btn btn-create ${isFormValid ? 'active' : ''}`} onClick={handleSubmit}>
+            {buttonText}
+          </button>
         </div>
       </div>
     </div>
   );
 };
 
-export default CreateCategoryDrawer;
+export default CategoryDrawer;
