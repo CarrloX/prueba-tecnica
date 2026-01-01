@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { useNavigate, useLocation, Routes, Route } from 'react-router-dom'
 import { useAuthContext } from '../../hooks/useAuthContext'
 import TopBar from '../../components/TopBar/TopBar'
@@ -10,12 +11,15 @@ export default function Backends() {
   const navigate = useNavigate()
   const location = useLocation()
   const { logout } = useAuthContext()
+  const [sidebarOpen, setSidebarOpen] = useState(false)
 
   const topbarHeight = 65
 
   const handleNavigate = (section: string) => {
     const path = section === 'home' ? '/backends' : `/backends/${section}`
     navigate(path)
+    // Cerrar sidebar en móviles después de navegar
+    setSidebarOpen(false)
   }
 
   const handleLogout = async () => {
@@ -30,18 +34,31 @@ export default function Backends() {
   }
 
   return (
-    <div className="container">
-      <TopBar height={topbarHeight} />
+    <div className="backends-container">
+      <TopBar
+        height={topbarHeight}
+        onMenuClick={() => setSidebarOpen(!sidebarOpen)}
+      />
 
       <Sidebar
         topbarHeight={topbarHeight}
         currentPage={getCurrentPage()}
         onNavigate={handleNavigate}
         onLogout={handleLogout}
+        isOpen={sidebarOpen}
+        onClose={() => setSidebarOpen(false)}
       />
 
+      {/* Overlay para móviles */}
+      {sidebarOpen && (
+        <div
+          className="sidebar-overlay"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+
       {/* Contenido principal */}
-      <div className="main-content">
+      <div className={`main-content ${sidebarOpen ? 'sidebar-open' : ''}`}>
         <Routes>
           <Route index element={<ComingSoon />} />
           <Route path="impacto-social" element={<ComingSoon />} />

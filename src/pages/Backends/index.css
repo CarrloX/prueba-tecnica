@@ -1,4 +1,4 @@
-.container {
+.backends-container {
   position: fixed;
   top: 0;
   left: 0;
@@ -9,11 +9,40 @@
   overflow: hidden;
 }
 
+.sidebar-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+  display: none;
+}
+
 .main-content {
   position: absolute;
   top: 65px;
-  left: 300px;
-  width: calc(100% - 300px);
+  left: 230px;
+  width: calc(100% - 230px);
   height: calc(100% - 65px);
   background-color: white;
+  transition: left 0.3s ease, width 0.3s ease;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .sidebar-overlay {
+    display: block;
+  }
+
+  .main-content {
+    left: 0;
+    width: 100%;
+  }
+
+  .main-content.sidebar-open {
+    left: 230px;
+    width: calc(100% - 230px);
+  }
 }

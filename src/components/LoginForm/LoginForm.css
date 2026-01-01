@@ -10,8 +10,6 @@
   align-items: center;
   padding: 0px;
   gap: 24px;
-  width: 517px;
-  height: 292px;
   flex: none;
   order: 1;
   align-self: stretch;
@@ -36,14 +34,13 @@
   margin: 0 auto;
 }
 .bk-title {
-  width: 517px;
-  height: 72px;
   font-style: normal;
   font-weight: 400;
   font-size: 28px;
   line-height: 36px;
   text-align: center;
   color: #000000;
+  max-width: 100%;
 }
 .bk-label {
   font-size: 0.85rem;
@@ -71,6 +68,14 @@
   outline: none;
   box-shadow: none;
 }
+.bk-input-row input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0px 1000px #f3f3f3 inset !important;
+  background: #f3f3f3 !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  -webkit-text-fill-color: #000 !important;
+  transition: background-color 5000s ease-in-out 0s;
+}
 .bk-icon {
   color: #6b6b6b;
   margin-right: 0.25rem;
@@ -88,8 +93,6 @@
   flex-direction: column;
   align-items: center;
   padding: 0px;
-  width: 480px;
-  height: 40px;
   flex: none;
   align-self: center;
   flex-grow: 0;
@@ -107,19 +110,20 @@
 }
 .bk-submit {
   margin-top: 0.75rem;
-  padding: 0px;
+  padding: 0.75rem 1.5rem;
   background: #dcdcdc;
   color: #999;
   border-radius: 6px;
   border: 0;
   cursor: not-allowed;
-  width: 260px;
-  height: 40px;
+  min-height: 40px;
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 8px;
   align-self: center;
+  width: 100%;
+  max-width: 260px;
 }
 .bk-submit:enabled {
   background: #1e1b4d;
@@ -131,11 +135,32 @@
   flex-grow: 0;
 }
 
+@media (max-width: 768px) {
+  .bk-title {
+    font-size: 24px;
+    line-height: 30px;
+  }
+  .bk-logo-image {
+    max-width: 150px;
+  }
+  .bk-submit {
+    max-width: 100%;
+  }
+}
+
 @media (max-width: 480px) {
   .bk-form {
     gap: 0.6rem;
   }
+  .bk-title {
+    font-size: 20px;
+    line-height: 26px;
+  }
   .bk-logo-image {
     max-width: 120px;
+  }
+  .bk-submit {
+    max-width: 100%;
+    padding: 1rem 1.5rem;
   }
 }

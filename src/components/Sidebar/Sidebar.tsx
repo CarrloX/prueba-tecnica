@@ -19,6 +19,8 @@ interface SidebarProps {
   currentPage?: string;
   onNavigate?: (section: string) => void;
   onLogout?: () => void;
+  isOpen?: boolean;
+  onClose?: () => void;
 }
 
 const Sidebar = ({
@@ -26,6 +28,8 @@ const Sidebar = ({
   currentPage = "home",
   onNavigate,
   onLogout,
+  isOpen = false,
+  onClose,
 }: SidebarProps) => {
   const menuItems = [
     { name: "Home", icon: <HomeIcon size={20} />, implemented: true },
@@ -77,7 +81,7 @@ const Sidebar = ({
   return (
     <aside
       ref={sidebarRef}
-      className="sidebar"
+      className={`sidebar ${isOpen ? 'sidebar-open' : ''}`}
     >
       {/* --- CABECERA (IMAGEN PNG) --- */}
       <div className="sidebar-header">

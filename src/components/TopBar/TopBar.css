@@ -13,6 +13,22 @@
   background-color: #1E1B4D; /* fallback */
 }
 
+.topbar__menu-btn {
+  display: none;
+  background: transparent;
+  border: none;
+  color: white;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 4px;
+  margin-right: 10px;
+  transition: background-color 0.2s ease;
+}
+
+.topbar__menu-btn:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
 .topbar__logo {
   height: 40px;
   width: auto;
@@ -36,4 +52,20 @@
   -moz-user-select: none;    /* Old Firefox */
   -ms-user-select: none;     /* IE10+ */
   user-select: none;
+}
+
+@media (max-width: 768px) {
+  .topbar__menu-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .topbar__logo {
+    margin-left: 20px;
+  }
+
+  .topbar__avatar {
+    margin-right: 20px;
+  }
 }

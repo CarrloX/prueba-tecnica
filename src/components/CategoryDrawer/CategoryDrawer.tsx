@@ -245,7 +245,9 @@ const CategoryDrawer: React.FC<CategoryDrawerProps> = ({
               onChange={handleToggle}
               aria-label="Estado de la categoría"
             />
-            <label htmlFor="activo-toggle" className="toggle-label">Activo</label>
+            <label htmlFor="activo-toggle" className="toggle-label">
+              {formData.activo ? "Activo" : "Inactivo"}
+            </label>
           </div>
         </div>
 

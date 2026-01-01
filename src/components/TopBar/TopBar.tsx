@@ -1,16 +1,19 @@
 import { useMemo } from "react";
 import { useAuthContext } from "../../hooks/useAuthContext";
+import { Menu } from "lucide-react";
 import logo from "../../assets/logo white.png";
 import "./TopBar.css";
 
 interface TopBarProps {
   height?: number;
   backgroundColor?: string;
+  onMenuClick?: () => void;
 }
 
 export default function TopBar({
   height = 60,
   backgroundColor = "#1E1B4D",
+  onMenuClick,
 }: TopBarProps) {
   const { user } = useAuthContext();
 
@@ -58,16 +61,27 @@ export default function TopBar({
     <>
       <style>{`.${dynamicClass} { height: ${height}px; background-color: ${backgroundColor}; } .${dynamicClass} .topbar__avatar { background-color: ${avatarColor}; }`}</style>
       <div className={`topbar ${dynamicClass}`}>
-      {/* Logo del lado izquierdo */}
-      <img src={logo} alt="Logo" className="topbar__logo" />
+        {/* Botón hamburger para móviles */}
+        {onMenuClick && (
+          <button
+            className="topbar__menu-btn"
+            onClick={onMenuClick}
+            aria-label="Abrir menú"
+          >
+            <Menu size={24} />
+          </button>
+        )}
 
-      {/* Avatar del lado derecho */}
-      {user && (
-        <div className="topbar__avatar">
-          {firstLetter}
-        </div>
-      )}
-    </div>
+        {/* Logo del lado izquierdo */}
+        <img src={logo} alt="Logo" className="topbar__logo" />
+
+        {/* Avatar del lado derecho */}
+        {user && (
+          <div className="topbar__avatar">
+            {firstLetter}
+          </div>
+        )}
+      </div>
     </>
   );
 }

@@ -12,6 +12,20 @@
   overflow: hidden;
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   z-index: 10;
+  transform: translateX(0);
+  transition: transform 0.3s ease;
+}
+
+/* Mobile: Sidebar oculto por defecto */
+@media (max-width: 768px) {
+  .sidebar {
+    transform: translateX(-100%);
+    z-index: 1000;
+  }
+
+  .sidebar.sidebar-open {
+    transform: translateX(0);
+  }
 }
 
 .sidebar-header {
