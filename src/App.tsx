@@ -5,6 +5,7 @@ import LoginModal from './components/LoginModal/LoginModal'
 import BackgroundImages from './components/BackgroundImages/BackgroundImages'
 import Backends from './pages/Backends'
 import { AuthProvider } from './contexts/AuthContext'
+import { ThemeProvider } from './contexts/ThemeContext'
 import { useAuthContext } from './hooks/useAuthContext'
 
 function AppContent() {
@@ -33,11 +34,13 @@ function AppContent() {
 
 function App() {
   return (
-    <AuthProvider>
-      <Router>
-        <AppContent />
-      </Router>
-    </AuthProvider>
+    <ThemeProvider>
+      <AuthProvider>
+        <Router>
+          <AppContent />
+        </Router>
+      </AuthProvider>
+    </ThemeProvider>
   )
 }
 

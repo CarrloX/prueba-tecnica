@@ -1112,3 +1112,237 @@
     background-position: calc(200px + 100%) 0;
   }
 }
+
+/* Dark mode support */
+.dark .bakanes-container {
+  background-color: #111827;
+  color: #f9fafb;
+}
+
+.dark .bakanes-title {
+  color: #f9fafb;
+}
+
+.dark .bakanes-tab-active {
+  color: #f9fafb !important;
+}
+
+.dark .bakanes-tab-inactive {
+  color: #9ca3af !important;
+}
+
+.dark .bakanes-tab-inactive:hover {
+  color: #d1d5db !important;
+}
+
+.dark .bakanes-tab::before,
+.dark .bakanes-tab-underline {
+  background: linear-gradient(90deg, #f9fafb, #60a5fa);
+}
+
+.dark .bakanes-search-input {
+  background-color: #374151;
+  border-color: #4b5563;
+  color: #f9fafb;
+}
+
+.dark .bakanes-search-input::placeholder {
+  color: #9ca3af;
+}
+
+.dark .bakanes-search-input:focus {
+  border-color: #60a5fa;
+  box-shadow: 0 0 0 1px #60a5fa;
+}
+
+.dark .bakanes-filter-button {
+  background: #374151 !important;
+  border-color: #4b5563 !important;
+  color: #f9fafb !important;
+}
+
+.dark .bakanes-filter-button:hover {
+  background-color: #4b5563 !important;
+  border-color: #6b7280 !important;
+}
+
+.dark .bakanes-filter-button svg {
+  color: #d1d5db;
+}
+
+.dark .bakanes-create-button {
+  background-color: #60a5fa !important;
+  color: #1f2937 !important;
+}
+
+.dark .bakanes-create-button:hover {
+  background-color: #3b82f6 !important;
+}
+
+.dark .bakanes-table-wrapper {
+  background-color: #1f2937;
+  border-color: #374151;
+}
+
+.dark .bakanes-table th {
+  background-color: #374151;
+  color: #f9fafb;
+  border-color: #4b5563;
+}
+
+.dark .bakanes-table td {
+  color: #f9fafb !important;
+  border-color: #374151;
+}
+
+.dark .bakanes-table tr:hover {
+  background-color: #374151;
+}
+
+.dark .bakanes-table tr:hover td {
+  color: #f9fafb !important;
+}
+
+.dark .status-badge-active {
+  background-color: #14532d;
+  border-color: #16a34a;
+  color: #bbf7d0;
+}
+
+.dark .status-badge-inactive {
+  background-color: #7f1d1d;
+  border-color: #dc2626;
+  color: #fecaca;
+}
+
+.dark .action-icon-button {
+  color: #9ca3af;
+}
+
+.dark .action-icon-button:hover {
+  color: #60a5fa;
+}
+
+.dark .column-swap-button {
+  color: #9ca3af;
+}
+
+.dark .column-swap-button:hover {
+  background-color: #374151;
+}
+
+.dark .column-swap-dropdown {
+  background: #1f2937;
+  border-color: #374151;
+}
+
+.dark .column-swap-dropdown-item {
+  color: #f9fafb;
+  border-color: #374151;
+}
+
+.dark .column-swap-dropdown-item:hover {
+  background-color: #374151;
+}
+
+.dark .pagination-container {
+  background-color: #1f2937;
+  border-color: #374151;
+}
+
+.dark .results-per-page-label {
+  color: #9ca3af;
+}
+
+.dark .pagination-arrow {
+  color: #9ca3af;
+}
+
+.dark .pagination-arrow:hover:not(:disabled) {
+  color: #f9fafb;
+}
+
+.dark .results-per-page-select {
+  background-color: #374151 !important;
+  border-color: #4b5563;
+  color: #f9fafb !important;
+}
+
+.dark .category-card {
+  background: #1f2937;
+  border-color: #374151;
+}
+
+.dark .card-title {
+  color: #f9fafb;
+}
+
+.dark .card-description {
+  color: #9ca3af;
+}
+
+.dark .card-date {
+  color: #6b7280;
+}
+
+.dark .status-badge-mobile.active {
+  background-color: #14532d;
+  border-color: #16a34a;
+  color: #bbf7d0;
+}
+
+.dark .status-badge-mobile.inactive {
+  background-color: #7f1d1d;
+  border-color: #dc2626;
+  color: #fecaca;
+}
+
+.dark .card-action-btn.edit-btn {
+  background-color: #374151;
+  color: #f9fafb;
+  border-color: #4b5563;
+}
+
+.dark .card-action-btn.edit-btn:hover {
+  background-color: #4b5563;
+  border-color: #6b7280;
+}
+
+.dark .card-action-btn.view-btn {
+  background-color: #1e3a8a;
+  color: #dbeafe;
+  border-color: #3b82f6;
+}
+
+.dark .card-action-btn.view-btn:hover {
+  background-color: #1d4ed8;
+  border-color: #2563eb;
+}
+
+.dark .card-action-btn.delete-btn {
+  background-color: #7f1d1d;
+  color: #fecaca;
+  border-color: #dc2626;
+}
+
+.dark .card-action-btn.delete-btn:hover {
+  background-color: #991b1b;
+  border-color: #b91c1c;
+}
+
+/* Icon colors in dark mode */
+.dark .action-icon-button svg path {
+  fill: #f9fafb;
+}
+
+.dark .search-icon-svg path {
+  fill: #f9fafb;
+}
+
+.dark .bakanes-filter-button svg path {
+  fill: #f9fafb;
+}
+
+.dark .card-action-btn svg path {
+  fill: #f9fafb;
+}

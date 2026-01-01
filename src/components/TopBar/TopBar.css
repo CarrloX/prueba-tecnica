@@ -14,6 +14,11 @@
   animation: slideDownFadeIn 0.5s ease-out;
 }
 
+.dark .topbar {
+  background-color: #1f2937; /* gray-800 */
+  box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
 .topbar__menu-btn {
   display: none;
   background: transparent;
@@ -41,6 +46,29 @@
   animation: fadeInScale 0.5s ease-out 0.3s both;
   opacity: 0;
   transform: scale(0.8);
+}
+
+.topbar__theme-btn {
+  background: transparent;
+  border: none;
+  color: white;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 4px;
+  margin-left: auto;
+  margin-right: 10px;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+  animation: fadeInScale 0.5s ease-out 0.3s both;
+  opacity: 0;
+  transform: scale(0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.topbar__theme-btn:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  transform: scale(1.05);
 }
 
 .topbar__avatar {

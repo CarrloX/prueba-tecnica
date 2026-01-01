@@ -30,6 +30,11 @@
   transition: left 0.3s ease, width 0.3s ease;
 }
 
+/* Dark mode support */
+.dark .main-content {
+  background-color: #111827;
+}
+
 /* Mobile responsiveness */
 @media (max-width: 768px) {
   .sidebar-overlay {

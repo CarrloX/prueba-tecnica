@@ -230,3 +230,71 @@
     opacity: 0.7;
   }
 }
+
+/* Dark mode support */
+.dark .bk-form {
+  color: #f9fafb;
+}
+
+.dark .bk-logo {
+  color: #f9fafb;
+}
+
+.dark .bk-title {
+  color: #f9fafb;
+}
+
+.dark .bk-label {
+  color: #d1d5db;
+}
+
+.dark .bk-input-row {
+  background: #374151;
+  border-color: #4b5563;
+  color: #f9fafb;
+}
+
+.dark .bk-input-row:focus-within {
+  border-color: #60a5fa;
+  box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.1);
+}
+
+.dark .bk-input-row input {
+  color: #f9fafb;
+}
+
+.dark .bk-input-row input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0px 1000px #374151 inset !important;
+  background: #374151 !important;
+  -webkit-text-fill-color: #f9fafb !important;
+}
+
+.dark .bk-icon {
+  color: #9ca3af;
+}
+
+.dark .bk-icon-btn {
+  color: #9ca3af;
+}
+
+.dark .bk-helper a {
+  color: #f9fafb;
+}
+
+.dark .bk-error {
+  color: #fca5a5;
+}
+
+.dark .bk-submit:disabled {
+  background: #6b7280;
+  color: #d1d5db;
+}
+
+.dark .bk-submit:enabled {
+  background: white;
+  color: #1f2937;
+}
+
+.dark .bk-icon path {
+  fill: white;
+}

@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useMemo } from "react";
+import { useState, useRef, useEffect } from "react";
 import { LogOut } from "lucide-react";
 import {
   HomeIcon,
@@ -11,7 +11,9 @@ import {
   ActionCategoriesIcon,
 } from "./icons";
 import BackgroundImages from "../BackgroundImages/BackgroundImages";
+import { useTheme } from "../../contexts/ThemeContext";
 import logo from "../../assets/logo.png";
+import logoWhite from "../../assets/logo white.png";
 import "./Sidebar.css";
 
 interface SidebarProps {
@@ -30,18 +32,12 @@ const Sidebar = ({
   onLogout,
   isOpen = false,
 }: SidebarProps) => {
+  const { theme } = useTheme();
   const [showComingSoon, setShowComingSoon] = useState<string | null>(null);
   const [animatingIcon, setAnimatingIcon] = useState<string | null>(null);
   const sidebarRef = useRef<HTMLElement>(null);
 
-  const colorPalette = useMemo(() => [
-    "#FF9AA2",
-    "#FFB7B2",
-    "#FFDAC1",
-    "#E2F0CB",
-    "#B5EAD7",
-    "#C7CEEA",
-  ], []);
+  const currentLogo = theme === 'dark' ? logoWhite : logo;
 
   const menuItems = [
     { name: "Home", icon: <HomeIcon size={20} isAnimating={animatingIcon === "Home"} />, implemented: true },
@@ -103,10 +99,9 @@ const Sidebar = ({
           applyBlur={false}
           applyOverlay={false}
           backgroundColor="transparent"
-          colorPalette={colorPalette}
           enableMorphing={false}
         />
-        <img src={logo} alt="Logo" className="sidebar-logo" />
+        <img src={currentLogo} alt="Logo" className="sidebar-logo" />
       </div>
 
       {/* --- LISTA DE NAVEGACIÓN --- */}

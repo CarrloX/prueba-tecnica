@@ -27,6 +27,12 @@
   transition: height 0.3s ease-out;
 }
 
+/* Dark mode support */
+.dark .bk-modal {
+  background: #1f2937;
+  color: #f9fafb;
+}
+
 .bk-modal.animated {
   overflow-y: auto;
 }

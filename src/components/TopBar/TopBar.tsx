@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import { useAuthContext } from "../../hooks/useAuthContext";
-import { Menu } from "lucide-react";
+import { useTheme } from "../../contexts/ThemeContext";
+import { Menu, Sun, Moon } from "lucide-react";
 import logo from "../../assets/logo white.png";
 import "./TopBar.css";
 
@@ -16,6 +17,7 @@ export default function TopBar({
   onMenuClick,
 }: TopBarProps) {
   const { user } = useAuthContext();
+  const { theme, toggleTheme } = useTheme();
 
   // Generar color aleatorio para el avatar (se mantiene consistente por email)
   const avatarColor = useMemo(() => {
@@ -59,8 +61,8 @@ export default function TopBar({
 
   return (
     <>
-      <style>{`.${dynamicClass} { height: ${height}px; background-color: ${backgroundColor}; } .${dynamicClass} .topbar__avatar { background-color: ${avatarColor}; }`}</style>
-      <div className={`topbar ${dynamicClass}`}>
+      <style>{`.${dynamicClass} { height: ${height}px; } .${dynamicClass} .topbar__avatar { background-color: ${avatarColor}; }`}</style>
+      <div className={`topbar ${dynamicClass} ${theme === 'dark' ? 'dark:bg-gray-800' : ''}`}>
         {/* Botón hamburger para móviles */}
         {onMenuClick && (
           <button
@@ -74,6 +76,15 @@ export default function TopBar({
 
         {/* Logo del lado izquierdo */}
         <img src={logo} alt="Logo" className="topbar__logo" />
+
+        {/* Botón de alternancia de tema */}
+        <button
+          className="topbar__theme-btn"
+          onClick={toggleTheme}
+          aria-label={`Cambiar a modo ${theme === 'light' ? 'oscuro' : 'claro'}`}
+        >
+          {theme === 'light' ? <Moon size={20} /> : <Sun size={20} />}
+        </button>
 
         {/* Avatar del lado derecho */}
         {user && (

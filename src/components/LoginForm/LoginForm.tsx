@@ -2,7 +2,9 @@ import React, { useState } from 'react'
 import './LoginForm.css'
 import { FiEye, FiEyeOff } from 'react-icons/fi'
 import { useAuthContext } from '../../hooks/useAuthContext'
+import { useTheme } from '../../contexts/ThemeContext'
 import logo from '../../assets/logo.png'
+import logoWhite from '../../assets/logo white.png'
 
 interface LoginFormProps {
   onLogin: () => void
@@ -11,6 +13,7 @@ interface LoginFormProps {
 
 export default function LoginForm({ onLogin, onModeChange }: LoginFormProps) {
   const { login, register } = useAuthContext()
+  const { theme } = useTheme()
   const [mode, setMode] = useState<'login' | 'register'>('login')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -18,6 +21,8 @@ export default function LoginForm({ onLogin, onModeChange }: LoginFormProps) {
   const [show, setShow] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+
+  const currentLogo = theme === 'dark' ? logoWhite : logo
 
   const isValid = mode === 'login'
     ? email.length > 0 && password.length > 0
@@ -50,7 +55,7 @@ export default function LoginForm({ onLogin, onModeChange }: LoginFormProps) {
   return (
     <form className="bk-form" onSubmit={handleSubmit} noValidate>
       <div className="bk-logo">
-        <img src={logo} alt="Logo" className="bk-logo-image" />
+        <img src={currentLogo} alt="Logo" className="bk-logo-image" />
       </div>
       <h3 className="bk-title">¡Empieza a conectar tu comunidad ante buenas acciones!</h3>
 

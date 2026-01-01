@@ -1,14 +1,25 @@
 import React, { useState, useEffect, useRef } from "react";
+import { useTheme } from "../../contexts/ThemeContext";
 import "./BackgroundImages.css";
 
-// Paleta base (pueden ser colores fuertes, la capa blanca los suavizará)
-const PALETTE = [
+// Paleta para modo claro (pueden ser colores fuertes, la capa blanca los suavizará)
+const LIGHT_PALETTE = [
   "#E8E6D9",
   "#F2EFE5",
   "#EBDCE1",
   "#D9E4DD",
   "#CEDFE6",
   "#F5E6CA",
+];
+
+// Paleta para modo oscuro (colores más oscuros y contrastantes)
+const DARK_PALETTE = [
+  "#2D3748",
+  "#4A5568",
+  "#2C5282",
+  "#2F855A",
+  "#3182CE",
+  "#805AD5",
 ];
 
 const FIXED_WIDTH = 1920;
@@ -55,14 +66,22 @@ interface BackgroundImagesProps {
 const BackgroundImages: React.FC<BackgroundImagesProps> = ({
   applyBlur = true,
   applyOverlay = true,
-  backgroundColor = "#f0f0f0ff",
-  colorPalette = PALETTE,
+  backgroundColor,
+  colorPalette,
   enableMorphing = true,
 }) => {
+  const { theme } = useTheme();
   const [shapes, setShapes] = useState<Shape[]>([]);
   const containerRef = useRef<HTMLDivElement>(null);
   const [containerSize, setContainerSize] = useState({ width: 0, height: 0 });
   const morphIntervalRef = useRef<number | null>(null);
+
+  // Determine theme-aware defaults
+  const defaultBackgroundColor = theme === 'dark' ? '#1f2937' : '#f0f0f0ff';
+  const defaultColorPalette = theme === 'dark' ? DARK_PALETTE : LIGHT_PALETTE;
+
+  const finalBackgroundColor = backgroundColor || defaultBackgroundColor;
+  const finalColorPalette = colorPalette || defaultColorPalette;
 
   useEffect(() => {
     const updateSize = () => {
@@ -123,7 +142,7 @@ const BackgroundImages: React.FC<BackgroundImagesProps> = ({
       attempts++;
       const type = SHAPE_TYPES[Math.floor(Math.random() * SHAPE_TYPES.length)];
       const color =
-        colorPalette[Math.floor(Math.random() * colorPalette.length)];
+        finalColorPalette[Math.floor(Math.random() * finalColorPalette.length)];
 
       // Much smaller base size for header usage
       const width = 235.79 * baseScale;
@@ -180,7 +199,7 @@ const BackgroundImages: React.FC<BackgroundImagesProps> = ({
 
     // Avoid synchronous state updates directly inside effect to prevent cascading renders
     requestAnimationFrame(() => setShapes(generatedShapes));
-  }, [colorPalette]);
+  }, [finalColorPalette]);
 
   // Sistema de transformación automática cada 2 segundos
   useEffect(() => {
@@ -300,10 +319,10 @@ const BackgroundImages: React.FC<BackgroundImagesProps> = ({
   }, []);
   // Generate a dynamic class for the container background color (no inline styles)
   const bgClassName = React.useMemo(() => {
-    if (!backgroundColor) return null;
-    const hash = Array.from(backgroundColor).reduce((acc, c) => acc * 31 + c.charCodeAt(0), 0);
+    if (!finalBackgroundColor) return null;
+    const hash = Array.from(finalBackgroundColor).reduce((acc, c) => acc * 31 + c.charCodeAt(0), 0);
     return `bg-images-bg-${Math.abs(hash)}`;
-  }, [backgroundColor]);
+  }, [finalBackgroundColor]);
 
   const bgStyleIdRef = useRef<string | null>(null);
 
@@ -315,7 +334,7 @@ const BackgroundImages: React.FC<BackgroundImagesProps> = ({
     if (!document.getElementById(styleId)) {
       const styleEl = document.createElement("style");
       styleEl.id = styleId;
-      styleEl.textContent = `.${bgClassName} { background-color: ${backgroundColor}; }`;
+      styleEl.textContent = `.${bgClassName} { background-color: ${finalBackgroundColor}; }`;
       document.head.appendChild(styleEl);
 
       return () => {
@@ -325,7 +344,7 @@ const BackgroundImages: React.FC<BackgroundImagesProps> = ({
     }
 
     return undefined;
-  }, [bgClassName, backgroundColor]);
+  }, [bgClassName, finalBackgroundColor]);
 
   // Función para interpolar entre dos valores
   const lerp = (start: number, end: number, progress: number): number => {

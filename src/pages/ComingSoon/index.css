@@ -51,3 +51,21 @@
     width: 60px;
   }
 }
+
+/* Dark mode support */
+.dark .coming-soon-container {
+  background-color: #111827;
+  color: #f9fafb;
+}
+
+.dark .coming-soon-title {
+  color: #f9fafb;
+}
+
+.dark .coming-soon-title::after {
+  background: linear-gradient(90deg, #f9fafb, #60a5fa);
+}
+
+.dark .coming-soon-text {
+  color: #d1d5db;
+}

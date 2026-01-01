@@ -4,6 +4,7 @@ import CategoryDrawer from "../../components/CategoryDrawer/CategoryDrawer";
 import ConfirmModal from "../../components/ConfirmModal/ConfirmModal";
 import { categoriesService, type Category } from "../../services/categoriesService";
 import { useAuthContext } from "../../hooks/useAuthContext";
+import { useTheme } from "../../contexts/ThemeContext";
 import "./Bakanes.css";
 
 // Hook to detect mobile screen size
@@ -28,6 +29,7 @@ type Tab = "categorias" | "tipos" | "evidencias";
 
 export default function Bakanes() {
   const { user } = useAuthContext();
+  const { theme } = useTheme();
   const isMobile = useIsMobile();
 
   const [activeTab, setActiveTab] = useState<Tab>("categorias");
@@ -366,7 +368,7 @@ export default function Bakanes() {
   }, [globalCursor]);
 
   return (
-    <div className="bakanes-container">
+    <div className={`bakanes-container ${theme === 'dark' ? 'dark' : ''}`}>
       {/* Header */}
       <h1 className="bakanes-title">Categorías</h1>
 

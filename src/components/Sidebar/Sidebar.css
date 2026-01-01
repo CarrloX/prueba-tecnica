@@ -17,6 +17,11 @@
   animation: slideInFromLeft 0.5s ease-out;
 }
 
+.dark .sidebar {
+  background-color: #1f2937;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
+
 /* Mobile: Sidebar oculto por defecto */
 @media (max-width: 768px) {
   .sidebar {
@@ -95,6 +100,10 @@
   overflow: hidden;
 }
 
+.dark .menu-item-button {
+  color: #e5e7eb;
+}
+
 .menu-item-button::before {
   content: '';
   position: absolute;
@@ -116,6 +125,10 @@
   box-shadow: 0 2px 8px rgba(0, 188, 198, 0.15);
 }
 
+.dark .menu-item-button:hover {
+  background-color: #374151;
+}
+
 .menu-item-button.active {
   background-color: #e0f8fa;
   border-left-color: #00bcc6;
@@ -124,9 +137,18 @@
   box-shadow: 0 2px 8px rgba(0, 188, 198, 0.2);
 }
 
+.dark .menu-item-button.active {
+  background-color: #374151;
+  color: #ffffff;
+}
+
 .menu-item-button.active .menu-icon {
   color: #1e1b4b;
   transform: scale(1.1);
+}
+
+.dark .menu-item-button.active .menu-icon {
+  color: #ffffff;
 }
 
 .menu-icon {
@@ -135,6 +157,10 @@
   align-items: center;
   justify-content: center;
   transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.dark .menu-icon {
+  color: #d1d5db;
 }
 
 .menu-item-button:hover .menu-icon {
@@ -196,6 +222,14 @@
   transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
+}
+
+.dark .logout-button {
+  color: #e5e7eb;
+}
+
+.dark .logout-button:hover {
+  color: #a78bfa;
 }
 
 .logout-button::before {
